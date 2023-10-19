@@ -1,7 +1,7 @@
 # snakesandladders
-Snakes and Ladders is a classic board game that combines luck and strategy.
+**Snakes and Ladders** is a classic board game that combines luck and strategy.
 
-Here are the rules of Snakes and Ladders:
+Here are the rules of **Snakes and Ladders**:
 + Snakes and Ladders is typically played on a numbered grid with 100 squares.
 + Players take turns rolling a standard six-sided die.
 + Move your game piece the number of squares corresponding to your die roll.
@@ -14,4 +14,4 @@ Here are the rules of Snakes and Ladders:
 + You can't skip turns, and you must move the full number rolled on your turn.
 + Enjoy the game and have fun with family and friends!
 
-"This project has a clear objective: to create a digital, scalable, and effortlessly testable rendition of the beloved game 'Snakes and Ladders' while adhering to popular design patterns. The end result will feature both a Graphical User Interface (GUI) and a Text-based User Interface (TUI) operating seamlessly in parallel. Our aim is to bring this classic game into the digital age, offering a modern and enjoyable experience for all players." - Ahmed and Jonathan (Developers)
+_"This project has a clear objective: to create a digital, scalable, and effortlessly testable rendition of the beloved game 'Snakes and Ladders' while adhering to popular design patterns. The end result will feature both a Graphical User Interface (GUI) and a Text-based User Interface (TUI) operating seamlessly in parallel. Our aim is to bring this classic game into the digital age, offering a modern and enjoyable experience for all players."_ - Ahmed and Jonathan (Developers)
