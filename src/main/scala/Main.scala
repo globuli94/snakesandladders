@@ -1,7 +1,7 @@
 object SnakesAndLaddersGame {
   def main(args: Array[String]): Unit = {
     //10x10 field
-    val boardSize = 6
+    val boardSize = 100
     val board = createGameBoard(boardSize)
     displayGameBoard(board)
   }
