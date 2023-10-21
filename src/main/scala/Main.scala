@@ -1,28 +1,57 @@
+import scala.util.Random
+
+case class GameConfig(boardSize: Int, snakesAndLadders: Map[Int, Int], numPlayers: Int)
+case class GameState(playerPositions: List[Int], currentPlayer: Int)
+
 object SnakesAndLaddersGame {
+  private val boardSize = 10
+  private val snakesAndLadders = Map(
+    3 -> 22,
+    5 -> 8,
+    11 -> 26,
+    20 -> 29,
+    27 -> 1,
+    21 -> 9,
+    17 -> 4,
+    19 -> 7
+  )
+
   def main(args: Array[String]): Unit = {
-    //10x10 field
-    val boardSize = 6
-    val board = createGameBoard(boardSize)
-    displayGameBoard(board)
+    val numPlayers = getNumberOfPlayers()
+    val initialState = GameState(List.fill(numPlayers)(1), 0)
+    val config = GameConfig(boardSize, snakesAndLadders, numPlayers)
+
+    playGame(config, initialState)
   }
 
-  def createGameBoard(size: Int): Array[Array[Int]] = {
-    val board = Array.ofDim[Int](size, size)
-    for {
-      row <- 0 until size
-      col <- 0 until size
-    } {
-      board(row)(col) = row * size + col + 1
+  def playGame(config: GameConfig, state: GameState): Unit = {
+    if (state.playerPositions(state.currentPlayer) >= config.boardSize * config.boardSize) {
+      println(s"Congratulations! Player ${state.currentPlayer + 1} won the game!")
+    } else {
+      val diceRoll = getDiceRollForPlayer(state.currentPlayer)
+      val newPosition = state.playerPositions(state.currentPlayer) + diceRoll
+      println(s"Player ${state.currentPlayer + 1} moves to $newPosition")
+
+      val updatedPosition = config.snakesAndLadders.getOrElse(newPosition, newPosition)
+      val updatedPositions = state.playerPositions.updated(state.currentPlayer, updatedPosition)
+      val nextPlayer = (state.currentPlayer + 1) % config.numPlayers
+
+      playGame(config, GameState(updatedPositions, nextPlayer))
     }
-    board
   }
 
-  def displayGameBoard(board: Array[Array[Int]]): Unit = {
-    for (row <- board.indices) {
-      for (col <- board(row).indices) {
-        print(f"${board(row)(col)}%3d ")
-      }
-      println()
-    }
+  def getNumberOfPlayers(): Int = {
+    println("How many players are playing? ")
+    scala.io.StdIn.readInt()
   }
+
+  def getDiceRollForPlayer(player: Int): Int = {
+    println(s"\nPlayer ${player + 1}'s turn. Press Enter to roll the dice...")
+    scala.io.StdIn.readLine()
+    val diceRoll = rollDice()
+    println(s"Player ${player + 1} rolled a $diceRoll")
+    diceRoll
+  }
+
+  def rollDice(): Int = Random.nextInt(6) + 1
 }
