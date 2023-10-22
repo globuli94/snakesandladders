@@ -30,7 +30,15 @@ object SnakesAndLaddersGame {
     } else {
       val diceRoll = getDiceRollForPlayer(state.currentPlayer)
       val newPosition = state.playerPositions(state.currentPlayer) + diceRoll
-      println(s"Player ${state.currentPlayer + 1} moves to $newPosition")
+      println(s"Player ${state.currentPlayer + 1} moves from position ${state.playerPositions(state.currentPlayer)} to position $newPosition.")
+
+      config.snakesAndLadders.get(newPosition) match {
+        case Some(finalPosition) if finalPosition > newPosition =>
+          println(s"Ladder! Player ${state.currentPlayer + 1} climbs to position $finalPosition.")
+        case Some(finalPosition) =>
+          println(s"Snake! Player ${state.currentPlayer + 1} slides down to position $finalPosition.")
+        case None => // No snake or ladder encountered
+      }
 
       val updatedPosition = config.snakesAndLadders.getOrElse(newPosition, newPosition)
       val updatedPositions = state.playerPositions.updated(state.currentPlayer, updatedPosition)
@@ -39,6 +47,7 @@ object SnakesAndLaddersGame {
       playGame(config, GameState(updatedPositions, nextPlayer))
     }
   }
+
 
   def getNumberOfPlayers(): Int = {
     println("How many players are playing? ")
