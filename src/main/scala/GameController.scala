@@ -1,6 +1,9 @@
 import scala.io.StdIn
 
 class GameController {
+  def createGame(size: Int): Game = {
+    Game(GameController().createBoard(size))
+  }
   def createBoard(size: Int): Board = {
     Board(size)
   }

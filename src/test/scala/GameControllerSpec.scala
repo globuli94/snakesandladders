@@ -3,6 +3,17 @@ import org.scalatest.matchers.should.Matchers
 
 class GameControllerSpec extends AnyWordSpec with Matchers {
 
+  // createGame() test
+  "A Game" when {
+    "created with size 10" should {
+      val game = GameController().createGame(10)
+      "have a Board with the size 10 and a val players that is an empty Vector" in {
+        game.board.size should be(10)
+        game.players should be(Vector.empty)
+      }
+    }
+  }
+  
   // createBoard() test
   "A Board" when {
     "created with size 10 and Player(Marko)" should {
