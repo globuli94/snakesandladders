@@ -12,4 +12,3 @@ lazy val root = project
     libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.14",
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.14" % "test",
   )
-enablePlugins(ScoverageSbtPlugin)
