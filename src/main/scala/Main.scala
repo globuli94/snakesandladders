@@ -1,5 +1,5 @@
-@main def hello: Unit =
-  println("Hello world!")
-  println(msg)
+@main def main(): Unit = {
+  val board = GameController().createBoard(100)
+  println(board.size)
+}
 
-def msg = "I was compiled by Scala 3. :)"

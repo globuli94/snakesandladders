@@ -1,0 +1,1 @@
+case class Board(size: Int)
