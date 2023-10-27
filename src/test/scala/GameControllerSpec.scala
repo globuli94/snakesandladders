@@ -16,7 +16,7 @@ class GameControllerSpec extends AnyWordSpec with Matchers {
   
   // createBoard() test
   "A Board" when {
-    "created with size 10 and Player(Marko)" should {
+    "created with size 10" should {
       val board = GameController().createBoard(0)
       "have the size 0" in {
         board.size should be(0)
@@ -47,7 +47,7 @@ class GameControllerSpec extends AnyWordSpec with Matchers {
 
   // movePlayer() test
   "A Player" when {
-    "at the position 0" should {
+    "at the position 0 with the name Marko" should {
       val player = GameController().createPlayer("Marko")
       "move to position 3 when rolling a 3" in {
         val player_new = GameController().movePlayer(player, 3)
