@@ -20,5 +20,6 @@ case class Controller(var game: aGame) extends Observable {
     sys.exit(0);
 
   override def toString: String =
+    
     game.toString
 }

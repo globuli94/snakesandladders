@@ -20,15 +20,14 @@ case class aGame(board:Board = Board(10), queue: Queue[Player] = Queue.empty) {
       case _ =>
         aGame(board, player._2.enqueue(player._1))
     }
-    
+
   override def toString: String =
-    val stringBuilder = new StringBuilder("Players: ")
-    
+    val stringBuilder = new StringBuilder("---------------------------\nPlayers: ")
+
     queue.foreach(element =>
       stringBuilder.append(element.name + "[")
       stringBuilder.append(element.position + "] ")
     )
-    stringBuilder.append("\nNext Player up is: " + queue.head.name + "\n")
-
+    stringBuilder.append("\nNext Player up is: " + queue.head.name + "\n---------------------------")
     stringBuilder.toString()
 }
