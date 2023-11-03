@@ -4,14 +4,7 @@ package controller
 import snakes.model.aGame
 import snakes.util.Observable
 
-
 case class Controller(var game: aGame) extends Observable {
-  def loop(): aGame =
-    while(game.queue.last.position != game.board.size) {
-      updateGame(game)
-    }
-    game
-
   def addPlayer(name:String): aGame =
     updateGame(game.createPlayer(name))
 
@@ -27,13 +20,5 @@ case class Controller(var game: aGame) extends Observable {
     sys.exit(0);
 
   override def toString: String =
-    val stringBuilder = new StringBuilder("Player: ")
-    
-    
-    game.queue.foreach(element =>
-      stringBuilder.append(element.name + "(")
-      stringBuilder.append(element.position + ") ")
-    )
-    stringBuilder.append("\nNext Player up is: " + game.queue.head.name + "\n")
-    stringBuilder.toString()
+    game.toString
 }
