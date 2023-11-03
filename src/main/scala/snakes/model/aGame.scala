@@ -1,9 +1,12 @@
-package snakes
-package model
-import scala.collection.immutable.Queue
-import util.Dice
+package snakes.model
 
-case class aGame(board:Board = model.Board(10), queue: Queue[Player] = Queue.empty) {
+import snakes.model.Board
+import snakes.model.Player
+import snakes.util.Dice
+
+import scala.collection.immutable.Queue
+
+case class aGame(board:Board = Board(10), queue: Queue[Player] = Queue.empty) {
   def createPlayer(name:String): aGame =
     aGame(board, queue.enqueue(Player(name, 0)))
 

@@ -1,9 +1,9 @@
 package snakes
 package controller
 
-import model.aGame
-import model.Player
-import util.Observer
+import snakes.model.aGame
+import snakes.util.Observable
+
 
 case class Controller(var game: aGame) extends Observable {
   def loop(): aGame =
@@ -28,6 +28,8 @@ case class Controller(var game: aGame) extends Observable {
 
   override def toString: String =
     val stringBuilder = new StringBuilder("Player: ")
+    
+    
     game.queue.foreach(element =>
       stringBuilder.append(element.name + "(")
       stringBuilder.append(element.position + ") ")
