@@ -19,7 +19,7 @@ class aGameSpec extends AnyWordSpec {
       val jonathan = Player("Jonathan", 0)
       val peter = Player("Peter", 0)
 
-      val game = aGame(20)
+      val game = aGame(Board(20))
       val game2 = game.createPlayer("Jonathan")
       val test = game.createPlayer("Peter")
       "should return a game with the board size 20 and players Jonathan and Peter at position 0" in {
