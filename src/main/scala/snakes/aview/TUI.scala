@@ -7,6 +7,7 @@ import scala.io.StdIn.readLine
 
 class TUI(controller:Controller) extends Observer {
   controller.add(this)
+
   def run(): Unit =
     getInputAndPrintLoop()
 
@@ -22,12 +23,11 @@ class TUI(controller:Controller) extends Observer {
       case "add" =>
         controller.addPlayer(splitInput(1))
       case "roll"
-        => controller.roll
+      => controller.roll
       case _
-        => println("not a valid command!")
+      => println("not a valid command!")
 
     getInputAndPrintLoop()
-
   override def update: Unit =
     println(controller.toString)
 }
