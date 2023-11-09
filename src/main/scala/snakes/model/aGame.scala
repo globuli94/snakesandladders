@@ -28,6 +28,13 @@ case class aGame(board:Board = Board(10), queue: Queue[Player] = Queue.empty) {
       stringBuilder.append(element.name + "[")
       stringBuilder.append(element.position + "] ")
     )
-    stringBuilder.append("\nNext Player up is: " + queue.head.name + "\n---------------------------")
+    val lastPlayer = queue.last
+
+    if(board.size == lastPlayer.position) {
+      stringBuilder.append("\n" + queue.last.name + " has won the game!!!")
+    } else {
+      stringBuilder.append("\n" + queue.last.name + " moved to position " + queue.last.position + "!")
+      stringBuilder.append("\nNext Player up is: " + queue.head.name + "\n---------------------------")
+    }
     stringBuilder.toString()
 }
