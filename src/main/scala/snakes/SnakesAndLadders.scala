@@ -3,9 +3,21 @@ package snakes
 import aview.TUI
 import controller.Controller
 import model.aGame
-@main def main: Unit =
-  println("Welcome to Snakes and Ladders")
-  val game = aGame()
-  val controller = Controller(game)
+
+import scala.io.StdIn.readLine
+
+object SnakesAndLadders {
+  val game: aGame = aGame()
+  val controller: Controller = Controller(game)
   val tui = TUI(controller)
-  tui.run()
+  controller.notifyObservers
+  
+  def main(args: Array[String]): Unit = {
+    var input: String = ""
+
+    while(input != "exit") {
+      input = readLine()
+      tui.getInputAndPrintLoop(input)
+    }
+  }
+}

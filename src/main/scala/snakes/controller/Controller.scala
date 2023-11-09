@@ -16,9 +16,6 @@ case class Controller(var game: aGame) extends Observable {
     notifyObservers
     game
 
-  def exit: Nothing =
-    sys.exit(0);
-
   override def toString: String =
     game.toString
 }
