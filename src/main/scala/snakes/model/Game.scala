@@ -5,7 +5,7 @@ import snakes.util.Observable
 class Game(val players: Array[Player], val board: Board, val dice: Dice) extends Observable {
   private var states: Array[Player] = players
 
-  def movePlayer(playerNumber: Int, roll: Int): Unit = {
+  def movePlayer(playerNumber: Int, roll: Int): Int = {
     val player = states(playerNumber - 1)
     var newPosition = player.position + roll
 
@@ -14,6 +14,7 @@ class Game(val players: Array[Player], val board: Board, val dice: Dice) extends
 
     states = states.updated(playerNumber - 1, player.copy(position = newPosition))
     notifyObservers(playerNumber, newPosition, roll)
+    newPosition
   }
 
   def checkWin(playerNumber: Int): Boolean = {
