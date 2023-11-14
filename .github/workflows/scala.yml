@@ -1,8 +1,8 @@
 on:
   push:
-    branches: [ "master", "coveralls" ]
+    branches: [ "main", "AhmedBranch", "globuli94"]
   pull_request:
-    branches: [ "master", "coveralls" ]
+    branches: [ "main" ]
 
 permissions:
   contents: read
