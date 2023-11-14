@@ -26,6 +26,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build and export Coverage
         run:
+          sbt clean coverage test
           sbt coverageReport coveralls
         env:
           CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
