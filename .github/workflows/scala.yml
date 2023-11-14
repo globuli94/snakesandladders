@@ -31,4 +31,4 @@ jobs:
         distribution: 'adopt'
     - name: run tests
       run: 
-        sbt clean coverage test coveralls
+        sbt clean coverage test coverageReport coveralls
