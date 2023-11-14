@@ -36,4 +36,6 @@ jobs:
     - name: create report
       run: sbt clean coverage test coverageReport
     - name: upload
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       run: sbt coverageReport coveralls
