@@ -31,5 +31,7 @@ jobs:
         distribution: 'adopt'
     - name: run tests
       run: sbt test
+    - name: aggregate
+      run: sbt coverageAggregate
     - name: upload
       run: sbt coverageReport coveralls
