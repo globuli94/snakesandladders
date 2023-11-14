@@ -23,7 +23,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build and export Coverage
-        run: sbt coverageReport coveralls
+        run: | 
+          sbt coverageReport coveralls
           export CI_BRANCH="${GITHUB_REF#refs/heads/}"
         env:
           CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
