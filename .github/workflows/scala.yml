@@ -17,7 +17,7 @@ jobs:
     - name: compile
       run: sbt compile
     - name: run tests
-      run: sbt test
+      run: sbt clean coverage test
   run_tests:
     runs-on: ubuntu-latest
     steps:
@@ -27,6 +27,5 @@ jobs:
           CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
           COVERALLS_REPO_TOKEN: ${{secrets.COVERALLS_REPO_TOKEN}}
         run: |
+          sbt coverageReport coveralls
           export CI_BRANCH="${GITHUB_REF#refs/heads/}"
-          sbt clean coverage test
-          sbt coverageReport
