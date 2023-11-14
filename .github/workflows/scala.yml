@@ -14,6 +14,8 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
+    - name: Coveralls GitHub Action
+      uses: coverallsapp/github-action@v2.2.3      
     - name: compile
       run: sbt compile
     - name: run tests
