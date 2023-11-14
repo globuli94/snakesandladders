@@ -15,3 +15,5 @@ Here are the rules of **Snakes and Ladders**:
 + Enjoy the game and have fun with family and friends!
 
 _"This project has a clear objective: to create a digital, scalable, and effortlessly testable rendition of the beloved game 'Snakes and Ladders' while adhering to popular design patterns. The end result will feature both a Graphical User Interface (GUI) and a Text-based User Interface (TUI) operating seamlessly in parallel. Our aim is to bring this classic game into the digital age, offering a modern and enjoyable experience for all players."_ - Ahmed and Jonathan (Developers)
+
+[![Coverage Status](https://coveralls.io/repos/github/globuli94/snakesandladders/badge.svg?branch=main)](https://coveralls.io/github/globuli94/snakesandladders?branch=main)
