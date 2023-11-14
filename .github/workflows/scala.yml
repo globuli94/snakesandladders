@@ -1,32 +1,31 @@
-name: Scala CI
 on:
   push:
-    branches: [AhmedBranch, main, globuli94]
+    branches: [ "master", "coveralls" ]
   pull_request:
-    branches: [main]
+    branches: [ "master", "coveralls" ]
+
+permissions:
+  contents: read
+
 jobs:
-  
   build:
+
     runs-on: ubuntu-latest
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up JDK 11
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         java-version: '11'
-        distribution: 'adopt'     
-    - name: compile
-      run: sbt compile
-    - name: run tests
+        distribution: 'temurin'
+        cache: 'sbt'
+    - name: Run tests
       run: sbt test
-  
-  run_tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Build and export Coverage
-        run:
-          sbt coverageReport coveralls
-        env:
-          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
-          COVERALLS_REPO_TOKEN: ${{secrets.COVERALLS_REPO_TOKEN}}
+    - name: Coveralls
+      run: sbt clean coverage test coverageReport
+    - name: Upload coveralls
+      run: sbt coverageReport coveralls
