@@ -30,8 +30,7 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
     - name: run tests
-      run: sbt test
-    - name: aggregate
-      run: sbt coverageAggregate
-    - name: upload
-      run: sbt coverageReport coveralls
+      run: 
+        sbt test
+        sbt coverageAggregate
+        sbt coverageReport coveralls
