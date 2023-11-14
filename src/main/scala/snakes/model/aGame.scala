@@ -22,7 +22,7 @@ case class aGame(board:Board = Board(10), queue: Queue[Player] = Queue.empty) {
 
   override def toString: String =
     if(queue.isEmpty) {
-      "Please add Players to the Game first"
+      "Please add Players to the Game first!"
     } else if(queue.last.position == 0) {
       queue.last.name + " has been added to the Game!"
     } else if(board.size == queue.last.position) {
