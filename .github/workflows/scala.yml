@@ -17,7 +17,7 @@ jobs:
     - name: compile
       run: sbt compile
     - name: run tests
-      run: sbt clean coverage test
+      run: sbt test
   run_tests:
     runs-on: ubuntu-latest
     steps:
