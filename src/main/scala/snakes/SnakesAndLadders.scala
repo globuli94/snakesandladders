@@ -13,7 +13,7 @@ object SnakesAndLadders {
   controller.notifyObservers
   
   def main(args: Array[String]): Unit = {
-    println("Welcome to Snakes and Ladders")
+    tui.setupGameMode()
     var input: String = ""
 
     while(input != "exit") {

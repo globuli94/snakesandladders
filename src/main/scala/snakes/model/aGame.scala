@@ -6,19 +6,21 @@ import snakes.util.Dice
 
 import scala.collection.immutable.Queue
 
-case class aGame(board:Board = Board(10), queue: Queue[Player] = Queue.empty) {
+case class aGame(board:Board = Board(10, 0, 0), queue: Queue[Player] = Queue.empty) {
   def createPlayer(name:String): aGame =
     aGame(board, queue.enqueue(Player(name, 0)))
 
-  def moveNextPlayer(roll: Int): aGame =
-    val player = queue.dequeue
+  def moveNextPlayer(roll: Int): aGame = {
+    val (player, newQueue) = queue.dequeue
+    val newPosition = player.position + roll
 
-    player._1.position + roll match {
-      case position if (position <= board.size) =>
-        aGame(board, player._2.enqueue(player._1.move(roll)))
-      case _ =>
-        aGame(board, player._2.enqueue(player._1))
+    val updatedPlayer = newPosition match {
+      case position if position <= board.size => player.move(roll)
+      case _ => player
     }
+
+    aGame(board, newQueue.enqueue(updatedPlayer))
+  }
 
   override def toString: String =
     if(queue.isEmpty) {
@@ -37,4 +39,16 @@ case class aGame(board:Board = Board(10), queue: Queue[Player] = Queue.empty) {
       stringBuilder.append("\nNext Player up is: " + queue.head.name + "\n---------------------------")
       stringBuilder.toString()
     }
+
+  def setupGame(size: Int, difficulty: String, playerNames: List[String]): aGame = {
+    val (snakes, ladders) = difficulty match {
+      case "easy" => (1, 5)
+      case "normal" => (3, 2)
+      case "difficult" => (5, 1)
+      case _ => (0, 0)
+    }
+    val newBoard = Board(size, snakes, ladders)
+    val newQueue = Queue(playerNames.map(name => Player(name, 0)): _*)
+    aGame(newBoard, newQueue)
+  }
 }

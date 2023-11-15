@@ -11,10 +11,16 @@ case class Controller(var game: aGame) extends Observable {
   def roll: aGame =
     updateGame(game.moveNextPlayer(Dice().rollDice))
 
-  def updateGame(updatedGame:aGame): aGame =
+  def updateGame(updatedGame:aGame): aGame ={
     game = updatedGame
     notifyObservers
     game
+  }
+
+  def setupGame(size: Int, difficulty: String, playerNames: List[String]): Unit = {
+    updateGame(game.setupGame(size, difficulty, playerNames))
+  }
+
 
   override def toString: String =
     game.toString
