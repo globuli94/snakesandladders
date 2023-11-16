@@ -12,12 +12,6 @@ class TUI(controller:Controller) extends Observer {
     println("Welcome to Snakes and Ladders!")
     println("Choose game length (short, medium, long):")
     val length = readLine()
-    val size = length match {
-      case "short" => 30
-      case "medium" => 50
-      case "long" => 100
-      case _ => 10
-    }
 
     println("Choose difficulty (easy, normal, difficult):")
     val difficulty = readLine()
@@ -30,7 +24,7 @@ class TUI(controller:Controller) extends Observer {
       readLine()
     }.toList
 
-    controller.setupGame(size, difficulty, playerNames)
+    controller.setupGame(length, difficulty, playerNames)
   }
 
   def getInputAndPrintLoop(input:String): Unit = {

@@ -17,8 +17,8 @@ case class Controller(var game: aGame) extends Observable {
     game
   }
 
-  def setupGame(size: Int, difficulty: String, playerNames: List[String]): Unit = {
-    updateGame(game.setupGame(size, difficulty, playerNames))
+  def setupGame(length: String, difficulty: String, playerNames: List[String]): Unit = {
+    updateGame(game.setupGame(length, difficulty, playerNames))
   }
 
 

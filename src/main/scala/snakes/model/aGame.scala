@@ -6,7 +6,7 @@ import snakes.util.Dice
 
 import scala.collection.immutable.Queue
 
-case class aGame(board:Board = Board(10, 0, 0), queue: Queue[Player] = Queue.empty) {
+case class aGame(board:Board = Board(10, 0, 0), queue: Queue[Player] = Queue.empty, lastRoll:Option[Int] = None) {
   def createPlayer(name:String): aGame =
     aGame(board, queue.enqueue(Player(name, 0)))
 
@@ -19,7 +19,7 @@ case class aGame(board:Board = Board(10, 0, 0), queue: Queue[Player] = Queue.emp
       case _ => player
     }
 
-    aGame(board, newQueue.enqueue(updatedPlayer))
+    aGame(board, newQueue.enqueue(updatedPlayer), Some(roll))
   }
 
   override def toString: String =
@@ -28,9 +28,15 @@ case class aGame(board:Board = Board(10, 0, 0), queue: Queue[Player] = Queue.emp
     } else if(queue.last.position == 0) {
       queue.last.name + " has been added to the Game!"
     } else if(board.size == queue.last.position) {
+
       queue.last.name + " has won the game!!!"
     } else {
-      val stringBuilder = new StringBuilder("---------------------------\nPlayers: ")
+      val stringBuilder = new StringBuilder("---------------------------\n")
+      lastRoll match {
+        case Some(roll) => stringBuilder.append("you just rolled a " + roll+ "\n")
+        case None => stringBuilder.append("No roll yet\n")
+      }
+      stringBuilder.append("Players: ")
       queue.foreach(element =>
         stringBuilder.append(element.name + "[")
         stringBuilder.append(element.position + "] ")
@@ -40,12 +46,18 @@ case class aGame(board:Board = Board(10, 0, 0), queue: Queue[Player] = Queue.emp
       stringBuilder.toString()
     }
 
-  def setupGame(size: Int, difficulty: String, playerNames: List[String]): aGame = {
+  def setupGame(length: String, difficulty: String, playerNames: List[String]): aGame = {
     val (snakes, ladders) = difficulty match {
       case "easy" => (1, 5)
       case "normal" => (3, 2)
       case "difficult" => (5, 1)
       case _ => (0, 0)
+    }
+    val size = length match {
+      case "short" => 30
+      case "medium" => 50
+      case "long" => 100
+      case _ => 10
     }
     val newBoard = Board(size, snakes, ladders)
     val newQueue = Queue(playerNames.map(name => Player(name, 0)): _*)
