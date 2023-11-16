@@ -5,10 +5,30 @@ import snakes.model.Player
 import snakes.util.Dice
 
 import scala.collection.immutable.Queue
+import scala.util.Random
 
-case class aGame(board:Board = Board(10, 0, 0), queue: Queue[Player] = Queue.empty, lastRoll:Option[Int] = None) {
+case class aGame(board:Board = Board(10, Map(), Map()), queue: Queue[Player] = Queue.empty, lastRoll:Option[Int] = None) {
   def createPlayer(name:String): aGame =
     aGame(board, queue.enqueue(Player(name, 0)))
+
+  private def generateSnakesAndLadders(snakesCount:Int, laddersCount:Int): (Map[Int, Int], Map[Int, Int]) = {
+    val rand = new Random()
+    val snakeHeads = (board.size * 2 / 3 to board.size).toList
+    val ladderBottoms = (1 to board.size / 3).toList
+
+    def generateMappings(count: Int, fromPositions: List[Int], toPositions: List[Int]): Map[Int, Int] = {
+      (1 to count).foldLeft(Map[Int, Int]()) { (map, _) =>
+        val from = fromPositions(rand.nextInt(fromPositions.size))
+        val to = toPositions.filterNot(_ == from).head
+        map + (from -> to)
+      }
+    }
+
+    val snakes = generateMappings(snakesCount, snakeHeads, ladderBottoms)
+    val ladders = generateMappings(laddersCount, ladderBottoms, snakeHeads)
+
+    (snakes, ladders)
+  }
 
   def moveNextPlayer(roll: Int): aGame = {
     val (player, newQueue) = queue.dequeue
@@ -17,6 +37,14 @@ case class aGame(board:Board = Board(10, 0, 0), queue: Queue[Player] = Queue.emp
     val updatedPlayer = newPosition match {
       case position if position <= board.size => player.move(roll)
       case _ => player
+    }
+
+    val maybeSnakeOrLadder = board.snakes.get(updatedPlayer.position)
+      .orElse(board.ladders.get(updatedPlayer.position))
+
+    val finalPlayer = maybeSnakeOrLadder match {
+      case Some(newPosition) => updatedPlayer.copy(position = newPosition)
+      case None => updatedPlayer
     }
 
     aGame(board, newQueue.enqueue(updatedPlayer), Some(roll))
@@ -47,11 +75,11 @@ case class aGame(board:Board = Board(10, 0, 0), queue: Queue[Player] = Queue.emp
     }
 
   def setupGame(length: String, difficulty: String, playerNames: List[String]): aGame = {
-    val (snakes, ladders) = difficulty match {
-      case "easy" => (1, 5)
-      case "normal" => (3, 2)
-      case "difficult" => (5, 1)
-      case _ => (0, 0)
+    val (snakesCount, laddersCount) = difficulty match {
+      case "easy" => (1, 10)
+      case "normal" => (5, 5)
+      case "difficult" => (10, 1)
+      case _ => (5, 5)
     }
     val size = length match {
       case "short" => 30
@@ -59,6 +87,7 @@ case class aGame(board:Board = Board(10, 0, 0), queue: Queue[Player] = Queue.emp
       case "long" => 100
       case _ => 10
     }
+    val (snakes, ladders) = generateSnakesAndLadders(snakesCount, laddersCount)
     val newBoard = Board(size, snakes, ladders)
     val newQueue = Queue(playerNames.map(name => Player(name, 0)): _*)
     aGame(newBoard, newQueue)
