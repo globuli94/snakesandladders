@@ -11,9 +11,9 @@ object SnakesAndLadders {
   val controller: Controller = Controller(game)
   val tui = TUI(controller)
   controller.notifyObservers
-  
+
   def main(args: Array[String]): Unit = {
-    tui.setupGameMode()
+    println("Welcome to Snakes and Ladders")
     var input: String = ""
 
     while(input != "exit") {
