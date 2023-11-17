@@ -1,6 +1,6 @@
 on:
   push:
-    branches: [ "main", "AhmedBranch", "globuli94"]
+    branches: [ "main", "AhmedBranch", "globuli94", "Test_Difficulty"]
   pull_request:
     branches: [ "main" ]
       
