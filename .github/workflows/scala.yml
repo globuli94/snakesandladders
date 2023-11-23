@@ -28,6 +28,7 @@ jobs:
         distribution: 'adopt'
     - name: run tests
       env:
-        COVERALLS_REPO_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       run: 
         sbt clean coverage test coverageReport coveralls
