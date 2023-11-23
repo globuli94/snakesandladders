@@ -3,7 +3,6 @@ package aview
 
 import util.Observer
 import controller.Controller
-import scala.io.StdIn.readLine
 
 class TUI(controller:Controller) extends Observer {
   controller.add(this)

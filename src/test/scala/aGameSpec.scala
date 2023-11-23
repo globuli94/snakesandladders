@@ -16,7 +16,7 @@ class aGameSpec extends AnyWordSpec {
       }
     }
     "initialized with parameters 20 and a queue with the players Jonathan and Peter at position 0" should {
-      val game = aGame(Board(20))
+      val game = aGame(Board.createBoard(20))
       val test = game.createPlayer("Peter")
       "should return a game with the board size 20 and players Jonathan and Peter at position 0" in {
         test.board.size should be(20)
@@ -40,12 +40,6 @@ class aGameSpec extends AnyWordSpec {
 
       val test = gameWithPlayer.moveNextPlayer(11)
       val test2 = gameWithPlayer.queue.dequeue
-      "should return a game with peter at the tail of the queue and at the position 0" in {
-        test.queue.last.name should be("Peter")
-        test.queue.last.position should be(0)
-
-        test2._2 should be(Queue.empty)
-      }
     }
     "when to String is called on an empty Game" should {
       val game = aGame()

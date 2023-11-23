@@ -6,7 +6,7 @@ import snakes.util.Dice
 
 import scala.collection.immutable.Queue
 
-case class aGame(board:Board = Board(10), queue: Queue[Player] = Queue.empty) {
+case class aGame(board:Board = Board.createBoard(10), queue: Queue[Player] = Queue.empty) {
 
   def createGame(size: Int): aGame = {
     aGame(Board.createBoard(size*size))
