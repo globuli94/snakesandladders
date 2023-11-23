@@ -8,6 +8,12 @@ import scala.collection.immutable.Queue
 
 case class aGame(board:Board = Board.createBoard(10), queue: Queue[Player] = Queue.empty) {
 
+  def saveToMemento: GameMemento = GameMemento(board, queue)
+
+  def restoreFromMemento(memento: GameMemento): aGame = {
+    aGame(memento.board, memento.queue)
+  }
+
   def createGame(size: Int): aGame = {
     aGame(Board.createBoard(size*size))
   }

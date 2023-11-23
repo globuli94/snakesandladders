@@ -42,5 +42,22 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         test should be(controller.game.toString)
       }
     }
+    "UndoCommand is executed" should {
+      "revert the game state to before the last command" in {
+        controller.addPlayer("Peter")
+        val preRollGame = controller.game
+        controller.saveState
+        controller.roll
+
+        val postRollGame = controller.game
+        postRollGame should not be preRollGame
+
+        val undoCommand = new UndoCommand(controller)
+        undoCommand.execute()
+        val undoneGame = controller.game
+
+        undoneGame should be(preRollGame)
+      }
+    }
   }
 }

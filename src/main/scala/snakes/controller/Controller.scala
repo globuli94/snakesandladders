@@ -7,6 +7,9 @@ import snakes.util.{Dice, Observable}
 trait Command{
   def execute(): Unit
 }
+class UndoCommand(controller: Controller) extends Command {
+  override def execute(): Unit = controller.undo
+}
 class CreateCommand(controller: Controller, size: Int) extends Command {
   def execute(): Unit = controller.create(size)
 }
@@ -16,7 +19,10 @@ class AddPlayerCommand(controller: Controller, name: String) extends Command {
 }
 
 class RollCommand(controller: Controller) extends Command {
-  def execute(): Unit = controller.roll
+  def execute(): Unit = {
+    controller.saveState
+    controller.roll
+  }
 }
 class UnknownCommand extends Command {
   def execute(): Unit = println("Not a valid command!")
@@ -25,7 +31,19 @@ class UnknownCommand extends Command {
 
 case class Controller(var game: aGame) extends Observable {
 
-  def create(size:Int): aGame = {
+  private val gameHistory = new GameHistory()
+
+  def undo: Unit = {
+    gameHistory.restoreState.foreach(memento => {
+      game = game.restoreFromMemento(memento)
+      notifyObservers
+    })
+  }
+
+
+    def saveState: Unit = gameHistory.saveState(game.saveToMemento)
+
+    def create(size:Int): aGame = {
     updateGame(game.createGame(size))
   }
   def addPlayer(name:String): aGame =
