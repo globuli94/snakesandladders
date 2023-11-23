@@ -11,6 +11,10 @@ object Board {
     val (snakes, ladders) = generateSnakesAndLadders(size)
     new Board(size, snakes, ladders)
   }
+  def createBoard(size:Int): Board = {
+    val (snakes, ladders) = generateSnakesAndLadders(size)
+    apply(size)
+  }
 
   private def generateSnakesAndLadders(size: Int): (Map[Int, Int], Map[Int, Int]) = {
     val numFeatures = (size * 0.1).toInt

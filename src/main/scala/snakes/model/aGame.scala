@@ -7,6 +7,10 @@ import snakes.util.Dice
 import scala.collection.immutable.Queue
 
 case class aGame(board:Board = Board(10), queue: Queue[Player] = Queue.empty) {
+
+  def createGame(size: Int): aGame = {
+    aGame(Board.createBoard(size))
+  }
   def createPlayer(name:String): aGame =
     aGame(board, queue.enqueue(Player(name, 0)))
 
@@ -27,7 +31,7 @@ case class aGame(board:Board = Board(10), queue: Queue[Player] = Queue.empty) {
 
   override def toString: String =
     if(queue.isEmpty) {
-      "Please add Players to the Game first!"
+      "Please add Players:"
     } else if(queue.last.position == 0) {
       queue.last.name + " has been added to the Game!"
     } else if(board.size == queue.last.position) {

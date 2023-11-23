@@ -13,6 +13,8 @@ class TUI(controller:Controller) extends Observer {
     val command = splitInput(0)
 
     splitInput(0) match
+      case "create" =>
+        controller.create(splitInput(1).toInt)
       case "add" =>
         controller.addPlayer(splitInput(1))
       case "roll"
