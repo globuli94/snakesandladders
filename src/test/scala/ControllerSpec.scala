@@ -1,8 +1,6 @@
-package snakes.controller
-
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
-
+import snakes.controller.{Controller, UndoCommand}
 import snakes.model.*
 
 class ControllerSpec extends AnyWordSpec with Matchers {

@@ -1,7 +1,6 @@
-package snakes.util
-
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
+import snakes.util.Dice
 
 class DiceSpec extends AnyWordSpec with Matchers {
 

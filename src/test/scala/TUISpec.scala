@@ -1,5 +1,3 @@
-package snakes.aview
-
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -21,6 +19,20 @@ class TUISpec extends AnyWordSpec with Matchers {
       tui.getInputAndPrintLoop("roll")
       "return a game with the updated position of the next player" in {
         controller.game.queue.last.name should be("Peter")
+      }
+    }
+    "undo is used after a roll" should {
+      "revert the game state to before the roll" in {
+        tui.getInputAndPrintLoop("add Peter")
+        val preRollGame = controller.game
+        tui.getInputAndPrintLoop("roll")
+
+        val postRollGame = controller.game
+        postRollGame should not be preRollGame
+        tui.getInputAndPrintLoop("undo")
+        val undoneGame = controller.game
+
+        undoneGame should be(preRollGame)
       }
     }
 

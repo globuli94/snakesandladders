@@ -1,7 +1,6 @@
-package snakes.model
-
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
+import snakes.model.Player
 
 import scala.collection.immutable.Queue
 
