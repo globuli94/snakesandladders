@@ -9,7 +9,7 @@ import scala.collection.immutable.Queue
 case class aGame(board:Board = Board(10), queue: Queue[Player] = Queue.empty) {
 
   def createGame(size: Int): aGame = {
-    aGame(Board.createBoard(size))
+    aGame(Board.createBoard(size*size))
   }
   def createPlayer(name:String): aGame =
     aGame(board, queue.enqueue(Player(name, 0)))

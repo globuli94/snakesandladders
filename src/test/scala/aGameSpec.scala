@@ -50,7 +50,7 @@ class aGameSpec extends AnyWordSpec {
     "when to String is called on an empty Game" should {
       val game = aGame()
       "return a string" in {
-        game.toString should be("Please add Players to the Game first!")
+        game.toString should be("Please add Players:")
       }
     }
     "when a player was recently added" should {
