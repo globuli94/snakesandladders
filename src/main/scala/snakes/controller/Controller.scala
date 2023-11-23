@@ -5,6 +5,10 @@ import snakes.model.aGame
 import snakes.util.{Dice, Observable}
 
 case class Controller(var game: aGame) extends Observable {
+
+  def create(size:Int): aGame = {
+    updateGame(game.createGame(size))
+  }
   def addPlayer(name:String): aGame =
     updateGame(game.createPlayer(name))
 

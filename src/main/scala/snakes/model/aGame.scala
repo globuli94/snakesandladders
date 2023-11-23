@@ -6,23 +6,38 @@ import snakes.util.Dice
 
 import scala.collection.immutable.Queue
 
-case class aGame(board:Board = Board(10), queue: Queue[Player] = Queue.empty) {
-  def createPlayer(name:String): aGame =
-    aGame(board, queue.enqueue(Player(name, 0)))
+case class aGame(board:Board = Board.createBoard(10), queue: Queue[Player] = Queue.empty) {
 
-  def moveNextPlayer(roll: Int): aGame =
-    val player = queue.dequeue
+  def createGame(size: Int): aGame = {
+    aGame(Board.createBoard(size*size))
+  }
 
-    player._1.position + roll match {
-      case position if (position <= board.size) =>
-        aGame(board, player._2.enqueue(player._1.move(roll)))
-      case _ =>
-        aGame(board, player._2.enqueue(player._1))
-    }
+  def createPlayer(name: String): aGame = {
+    val player = Player.builder()
+      .setName(name)
+      .setPosition(0)
+      .build()
+    aGame(board, queue.enqueue(player))
+  }
+
+  def moveNextPlayer(roll: Int): aGame = {
+    val (player, updatedQueue) = queue.dequeue
+    var newPosition = player.position + roll
+
+    newPosition = board.snakes.getOrElse(newPosition, newPosition) // If landed on snake
+    newPosition = board.ladders.getOrElse(newPosition, newPosition) // If landed on ladder
+
+    newPosition = newPosition min board.size
+
+    val updatedPlayer = player.moveTo(newPosition)
+    val newQueue = updatedQueue.enqueue(updatedPlayer)
+
+    aGame(board, newQueue)
+  }
 
   override def toString: String =
     if(queue.isEmpty) {
-      "Please add Players to the Game first!"
+      "Please add Players:"
     } else if(queue.last.position == 0) {
       queue.last.name + " has been added to the Game!"
     } else if(board.size == queue.last.position) {

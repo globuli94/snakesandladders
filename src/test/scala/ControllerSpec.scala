@@ -10,12 +10,12 @@ class ControllerSpec extends AnyWordSpec with Matchers {
   "Controller" when {
     val game = aGame()
     val controller = Controller(game)
+    val peter = Player.builder().setName("Peter").setPosition(0).build()
     "updateGame is called with a game with Peter[5] Marko[5]" should {
       val newGame = aGame()
-      val queue1 = newGame.queue.enqueue(Player("Peter", 5))
-      val queue2 = queue1.enqueue(Player("Marko", 5))
-      val testGame = aGame(newGame.board, queue2)
+      val queue1 = newGame.queue.enqueue(peter)
 
+      val testGame = aGame(newGame.board, queue1)
       val test = controller.updateGame(testGame)
       "update the game with the new game" in {
         test should be(testGame)
