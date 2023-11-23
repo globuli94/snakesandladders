@@ -11,8 +11,14 @@ case class aGame(board:Board = Board.createBoard(10), queue: Queue[Player] = Que
   def createGame(size: Int): aGame = {
     aGame(Board.createBoard(size*size))
   }
-  def createPlayer(name:String): aGame =
-    aGame(board, queue.enqueue(Player(name, 0)))
+
+  def createPlayer(name: String): aGame = {
+    val player = Player.builder()
+      .setName(name)
+      .setPosition(0)
+      .build()
+    aGame(board, queue.enqueue(player))
+  }
 
   def moveNextPlayer(roll: Int): aGame = {
     val (player, updatedQueue) = queue.dequeue
@@ -23,7 +29,7 @@ case class aGame(board:Board = Board.createBoard(10), queue: Queue[Player] = Que
 
     newPosition = newPosition min board.size
 
-    val updatedPlayer = player.copy(position = newPosition)
+    val updatedPlayer = player.moveTo(newPosition)
     val newQueue = updatedQueue.enqueue(updatedPlayer)
 
     aGame(board, newQueue)

@@ -25,7 +25,7 @@ class aGameSpec extends AnyWordSpec {
       }
     }
     "when calling moveNextPlayer(5) on a game size 10 with Peter at position 0" should {
-      val game = aGame()
+      val game = aGame(Board.createBoard(10))
       val gameWithPlayer = game.createPlayer("Peter")
 
       val test = gameWithPlayer.moveNextPlayer(5)
@@ -34,12 +34,27 @@ class aGameSpec extends AnyWordSpec {
         test.queue.last.position should be(5)
       }
     }
-    "when calling moveNextPlayer(11) on a game size 10 with Peter at position 0" should {
-      val game = aGame()
+    "when calling moveNextPlayer(11) on a game size 2 with Peter at position 0" should {
+      val game = aGame(Board.createBoard(2))
       val gameWithPlayer = game.createPlayer("Peter")
 
       val test = gameWithPlayer.moveNextPlayer(11)
       val test2 = gameWithPlayer.queue.dequeue
+    }
+    "when calling moveNextPlayer() on a game size 5 and a ladder on field 1" should {
+      val game = aGame().createGame(5)
+      val gameWithPlayer = game.createPlayer("Peter")
+
+      val test = gameWithPlayer.moveNextPlayer(1)
+    }
+    "when calling moveNextPlayer() on a game size 5 and a snake on field 5" should {
+      val game = aGame().createGame(5)
+      val gameWithPlayer = game.createPlayer("Peter")
+
+      val test = gameWithPlayer.moveNextPlayer(4)
+      "return a game with Peter at position 4" in {
+        test.queue.last.position should be(4)
+      }
     }
     "when to String is called on an empty Game" should {
       val game = aGame()
@@ -55,23 +70,26 @@ class aGameSpec extends AnyWordSpec {
       }
     }
     "when a player has won the game" should {
-      val game = aGame()
-      val test = aGame(game.board, game.queue.enqueue(Player("Peter", 10)))
+      val game = aGame(Board.createBoard(1))
+      val testPlayer = Player.builder().setName("Peter").setPosition(1).build()
+      val test = aGame(game.board, game.queue.enqueue(testPlayer))
       "return the string -> Peter has won the Game!!!" in {
         test.toString should be("Peter has won the game!!!")
       }
     }
     "when called on a game with players" should {
       val game = aGame()
-      val queue = game.queue.enqueue(Player("Peter", 3))
-      val testQueue = queue.enqueue(Player("Marko", 5))
+      val playerPeter = Player.builder().setName("Peter").setPosition(3).build()
+      val playerMarko = Player.builder().setName("Marko").setPosition(5).build()
+      val queue = game.queue.enqueue(playerPeter)
+      val testQueue = queue.enqueue(playerMarko)
 
       val test = aGame(game.board, testQueue)
       "return a String -> ---------------------------nPlayers: " in {
         test.toString should be("---------------------------\nPlayers: Peter[3] Marko[5] "
-        + "\nMarko moved to position 5!"
-        + "\nNext Player up is: Peter"
-        + "\n---------------------------")
+          + "\nMarko moved to position 5!"
+          + "\nNext Player up is: Peter"
+          + "\n---------------------------")
       }
     }
   }
