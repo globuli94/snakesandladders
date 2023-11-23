@@ -28,10 +28,10 @@ class aGameSpec extends AnyWordSpec {
       val game = aGame(Board.createBoard(10))
       val gameWithPlayer = game.createPlayer("Peter")
 
-      val test = gameWithPlayer.moveNextPlayer(5)
+      val test = gameWithPlayer.moveNextPlayer(6)
       "should return a game with peter at the tail of the queue with the position 5" in {
         test.queue.last.name should be("Peter")
-        test.queue.last.position should be(5)
+        test.queue.last.position should be(6)
       }
     }
     "when calling moveNextPlayer(11) on a game size 2 with Peter at position 0" should {
