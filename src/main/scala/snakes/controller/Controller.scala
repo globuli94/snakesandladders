@@ -34,10 +34,10 @@ case class Controller(var game: aGame) extends Observable {
   private val gameHistory = new GameHistory()
 
   def undo: Unit = {
-    gameHistory.restoreState.foreach(memento => {
+    gameHistory.restoreState.map {memento =>
       game = game.restoreFromMemento(memento)
       notifyObservers
-    })
+    }
   }
 
 
