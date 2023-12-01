@@ -4,6 +4,8 @@ package aview
 import util.Observer
 import controller.Controller
 
+import scala.util.{Failure, Success, Try}
+
 class TUI(controller:Controller) extends Observer {
   controller.add(this)
 
@@ -12,8 +14,9 @@ class TUI(controller:Controller) extends Observer {
     val command = splitInput(0)
 
     splitInput(0) match
-      case "create" =>
-        controller.create(splitInput(1).toInt)
+      case "create" => Try(splitInput(1).toInt) match
+        case Success(value) => controller.create(value)
+        case Failure(_) => new IllegalArgumentException("Invalid command")
       case "add" =>
         controller.addPlayer(splitInput(1))
       case "roll" => 
