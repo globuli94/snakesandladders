@@ -7,6 +7,9 @@ import snakes.util.{Dice, Observable}
 trait Command{
   def execute(): Unit
 }
+class RedoCommand(controller: Controller) extends Command {
+  override def execute(): Unit = controller.redo
+}
 class UndoCommand(controller: Controller) extends Command {
   override def execute(): Unit = controller.undo
 }
@@ -34,7 +37,14 @@ case class Controller(var game: aGame) extends Observable {
   private val gameHistory = new GameHistory()
 
   def undo: Unit = {
-    gameHistory.restoreState.map {memento =>
+    gameHistory.undo.map {memento =>
+      game = game.restoreFromMemento(memento)
+      notifyObservers
+    }
+  }
+
+  def redo: Unit = {
+    gameHistory.redo.map { memento =>
       game = game.restoreFromMemento(memento)
       notifyObservers
     }
@@ -49,8 +59,10 @@ case class Controller(var game: aGame) extends Observable {
   def addPlayer(name:String): aGame =
     updateGame(game.createPlayer(name))
 
-  def roll: aGame =
+  def roll: aGame = {
+    saveState
     updateGame(game.moveNextPlayer(Dice().rollDice))
+  }
 
   def updateGame(updatedGame:aGame): aGame =
     game = updatedGame

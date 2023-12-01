@@ -1,18 +1,40 @@
 package snakes.controller
 
+import snakes.SnakesAndLadders.game
 import snakes.model.GameMemento
 
 
 class GameHistory {
-  private var history: List[GameMemento] = List()
+  private var undoHistory: List[GameMemento] = List()
+  private var redoHistory: List[GameMemento] = List()
+  private var lastOperationWasUndo: Boolean = false
 
   def saveState(memento: GameMemento): Unit =
-    history = memento :: history
+    undoHistory = memento :: undoHistory
+    redoHistory = List()
+    lastOperationWasUndo = false
 
-  def restoreState: Option[GameMemento] =
-    if (history.nonEmpty) {
-      val lastState = history.head
-      history = history.tail
-      Some(lastState)
-    } else None
+  def undo: Option[GameMemento] =
+    undoHistory match {
+      case head :: next :: tail =>
+        undoHistory = next :: tail
+        redoHistory = head :: redoHistory
+        lastOperationWasUndo = true
+        Some(next)
+      case Nil => None
+    }
+
+  def redo: Option[GameMemento] = {
+    if (lastOperationWasUndo && redoHistory.nonEmpty) {
+      redoHistory match {
+        case head :: tail =>
+          redoHistory = tail
+          undoHistory = head :: undoHistory
+          lastOperationWasUndo = false
+          Some(head)
+      }
+    } else {
+      None
+    }
+  }
 }
