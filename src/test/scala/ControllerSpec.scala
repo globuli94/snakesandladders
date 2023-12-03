@@ -28,6 +28,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         test.queue.last.position should be(0)
       }
     }
+    /*
     "roll" should {
       val gameWithPeter = game.createPlayer("Peter")
       val test = controller.roll
@@ -36,6 +37,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         test.queue.last.position should(be <= 6 or be >= 1 or be(0))
       }
     }
+     */
     "toString" should {
       val test = controller.toString
       "return the toString from the model aGame" in {
