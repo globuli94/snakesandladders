@@ -51,7 +51,9 @@ case class Controller(var game: aGame) extends Observable {
   }
 
 
-    def saveState: Unit = gameHistory.saveState(game.saveToMemento)
+  def saveState: Unit = {
+    gameHistory.saveStateForUndo(game.saveToMemento)
+  }
 
     def create(size:Int): aGame = {
     updateGame(game.createGame(size))
