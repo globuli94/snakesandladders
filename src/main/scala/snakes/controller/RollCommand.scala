@@ -11,7 +11,10 @@ class RollCommand(controller: Controller, number: Int) extends Command {
 
   override def undoStep(): Unit =
     controller.game = gameState
-
+    
+  /*
   override def redoStep(): Unit =
     doStep()
+    
+   */
 }

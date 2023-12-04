@@ -20,11 +20,12 @@ case class Controller(var game: aGame) extends Observable {
   def undo: Unit =
     undoManager.undoStep()
     notifyObservers
-
+  /*
   def redo: Unit =
     undoManager.redoStep()
     notifyObservers
 
+   */
   def updateGame(updatedGame:aGame): aGame =
     game = updatedGame
     notifyObservers

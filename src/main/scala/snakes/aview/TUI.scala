@@ -23,8 +23,11 @@ class TUI(controller:Controller) extends Observer {
         controller.roll
       case "undo" =>
         controller.undo
+      /*
       case "redo" =>
         controller.redo
+
+       */
       case _
       => println("not a valid command!")
 

@@ -23,11 +23,21 @@ class TUISpec extends AnyWordSpec with Matchers {
         controller.game.queue.last.name should be("Peter")
       }
     }
-
     "create" should {
       "create a game with a board of size 10 when 'create 10' is input" in {
         tui.getInputAndPrintLoop("create 10")
         controller.game.board.size shouldBe 100
+      }
+    }
+    "undo" should {
+      "undo the last operation and call controller.undo" in {
+        val gameWithPlayer = controller.addPlayer("Peter")
+        controller.roll
+        val test1 = controller.game
+        controller.roll
+        val test2 = controller.game
+        tui.getInputAndPrintLoop("undo")
+        controller.game should be (test1)
       }
     }
     "any other input" should {

@@ -28,16 +28,17 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         test.queue.last.position should be(0)
       }
     }
-    /*
-    "roll" should {
-      val gameWithPeter = game.createPlayer("Peter")
-      val test = controller.roll
-      "move the next player in the queue to the rolled position" in {
-        test.queue.last.name should be("Peter")
-        test.queue.last.position should(be <= 6 or be >= 1 or be(0))
+    "undo is called on a game when a dice hase been rolled twice" should {
+      val gameWithPlayer = controller.addPlayer("Peter")
+      controller.roll
+      val test1 = controller.game
+      controller.roll
+      val test2 = controller.game
+      controller.undo
+      "return controller.game = test1" in {
+        controller.game = test1
       }
     }
-     */
     "toString" should {
       val test = controller.toString
       "return the toString from the model aGame" in {

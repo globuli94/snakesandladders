@@ -3,5 +3,5 @@ package snakes.util
 trait Command {
   def doStep(): Unit
   def undoStep(): Unit
-  def redoStep(): Unit
+  //def redoStep(): Unit
 }

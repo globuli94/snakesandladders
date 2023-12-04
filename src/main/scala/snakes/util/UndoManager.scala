@@ -21,7 +21,7 @@ class UndoManager {
       }
     }
   }
-
+  /*
   def redoStep(): Option[Command] = {
     redoStack match {
       case Nil => None
@@ -33,4 +33,5 @@ class UndoManager {
       }
     }
   }
+   */
 }
