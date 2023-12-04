@@ -23,8 +23,8 @@ class AddPlayerCommand(controller: Controller, name: String) extends Command {
 
 class RollCommand(controller: Controller) extends Command {
   def execute(): Unit = {
-    controller.saveState
     controller.roll
+    controller.saveState
   }
 }
 class UnknownCommand extends Command {
@@ -60,7 +60,6 @@ case class Controller(var game: aGame) extends Observable {
     updateGame(game.createPlayer(name))
 
   def roll: aGame = {
-    saveState
     updateGame(game.moveNextPlayer(Dice().rollDice))
   }
 
