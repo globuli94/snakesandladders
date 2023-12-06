@@ -15,11 +15,11 @@ case class Controller(var game: aGame) extends Observable {
     game = game.createPlayer(name)
     notifyObservers(Event.AddPlayer)
   
-  def roll: Unit =
+  def roll(): Unit =
     undoManager.doStep(RollCommand(this, Dice().rollDice))
     notifyObservers(Event.Roll)
 
-  def undo: Unit =
+  def undo(): Unit =
     undoManager.undoStep()
     notifyObservers(Event.Undo)
   /*
@@ -28,6 +28,10 @@ case class Controller(var game: aGame) extends Observable {
     notifyObservers
 
    */
+  def exit(): Unit = {
+    notifyObservers(Event.Exit)
+    sys.exit(0)
+  }
 
   override def toString: String =
     game.toString

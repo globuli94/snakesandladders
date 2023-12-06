@@ -15,19 +15,27 @@ class GUI(controller: Controller) extends Frame with Observer {
     contents += new Menu("Game") {
       contents += new MenuItem(Action("Add Player") {
         val playerName = Dialog.showInput[String](null,
-          null, "Enter Player Name", Dialog.Message.Plain, Swing.EmptyIcon,Nil,"")
+          null, "Enter Player Name", Dialog.Message.Plain, Swing.EmptyIcon, Nil,"")
         playerName match {
-          case Some(name) => controller.addPlayer(name)
+          case Some(name) =>
+            if(name.equals("")) {
+              Dialog.showMessage(null, "No Player Added!", "Error", Dialog.Message.Plain, Swing.EmptyIcon)
+            } else {
+              controller.addPlayer(name)
+            }
+          case None =>
         }
       })
       contents += new MenuItem(Action("Exit") {
-        sys.exit(0)
+        controller.exit()
       })
     }
   }
   pack()
   centerOnScreen()
   open()
+
+  
 
   def update(e: Event): Unit = {
     e match

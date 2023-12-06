@@ -20,14 +20,16 @@ class TUI(controller:Controller) extends Observer {
       case "add" =>
         controller.addPlayer(splitInput(1))
       case "roll" => 
-        controller.roll
+        controller.roll()
       case "undo" =>
-        controller.undo
+        controller.undo()
       /*
       case "redo" =>
         controller.redo
 
        */
+      case "exit" =>
+        controller.exit()
       case _
       => println("not a valid command!")
 
