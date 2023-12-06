@@ -6,7 +6,10 @@ import snakes.util.Dice
 
 import scala.collection.immutable.Queue
 
-case class aGame(board:Board = Board.createBoard(10), queue: Queue[Player] = Queue.empty) {
+case class aGame(board:Board = Board.createBoard(10), queue: Queue[Player] = Queue.empty, gameStarted: Boolean = false) {
+
+  def startGame: aGame = copy(gameStarted = true)
+
 
   def saveToMemento: GameMemento = GameMemento(board, queue)
 
@@ -42,7 +45,10 @@ case class aGame(board:Board = Board.createBoard(10), queue: Queue[Player] = Que
   }
 
   override def toString: String =
-    if(queue.isEmpty) {
+    if (gameStarted) {
+    "game started, please roll the dice."
+    }
+    else if(queue.isEmpty) {
       "Please add Players:"
     } else if(queue.last.position == 0) {
       queue.last.name + " has been added to the Game!"

@@ -2,7 +2,7 @@ package snakes
 package aview
 
 import util.Observer
-import controller.{AddPlayerCommand, Command, Controller, CreateCommand, RedoCommand, RollCommand, UndoCommand, UnknownCommand}
+import controller.{AddPlayerCommand, Command, Controller, CreateCommand, RedoCommand, RollCommand, StartCommand, UndoCommand, UnknownCommand}
 
 import scala.util.{Failure, Success, Try}
 
@@ -18,6 +18,7 @@ class TUI(controller:Controller) extends Observer {
         case Failure(_) => new UnknownCommand()
       }
       case "add"    => new AddPlayerCommand(controller, splitInput(1))
+      case "start" => new StartCommand(controller)
       case "roll"   => new RollCommand(controller)
       case "undo"   => new UndoCommand(controller)
       case "redo"   => new RedoCommand(controller)

@@ -7,6 +7,9 @@ import snakes.util.{Dice, Observable}
 trait Command{
   def execute(): Unit
 }
+class StartCommand(controller: Controller) extends Command {
+  def execute(): Unit = controller.start
+}
 class RedoCommand(controller: Controller) extends Command {
   override def execute(): Unit = controller.redo
 }
@@ -36,6 +39,14 @@ case class Controller(var game: aGame) extends Observable {
 
   private val gameHistory = new GameHistory()
 
+
+  def start: aGame = {
+    if (!game.gameStarted) {
+      game = game.startGame
+      notifyObservers
+    }
+    game
+  }
   def undo: Unit = {
     gameHistory.undo.map {memento =>
       game = game.restoreFromMemento(memento)
@@ -55,11 +66,23 @@ case class Controller(var game: aGame) extends Observable {
     gameHistory.saveStateForUndo(game.saveToMemento)
   }
 
-    def create(size:Int): aGame = {
-    updateGame(game.createGame(size))
+  def create(size: Int): aGame = {
+    if (!game.gameStarted) {
+      updateGame(game.createGame(size))
+    } else {
+      println("Game has already started. Cannot create a new board.")
+      game
+    }
   }
-  def addPlayer(name:String): aGame =
-    updateGame(game.createPlayer(name))
+
+  def addPlayer(name: String): aGame = {
+    if (!game.gameStarted) {
+      updateGame(game.createPlayer(name))
+    } else {
+      println("Game has already started. Cannot add new players.")
+      game
+    }
+  }
 
   def roll: aGame = {
     updateGame(game.moveNextPlayer(Dice().rollDice))
