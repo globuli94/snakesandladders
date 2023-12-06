@@ -2,14 +2,14 @@ package snakes
 package aview
 
 import util.Observer
-import controller.Controller
+import controller.{AddPlayerCommand, Command, Controller, CreateCommand, RollCommand, UnknownCommand}
 
 import scala.util.{Failure, Success, Try}
 
 class TUI(controller:Controller) extends Observer {
   controller.add(this)
 
-  def getInputAndPrintLoop(input:String): Unit =
+  def getInputAndPrintLoop(input: String): Unit =
     val splitInput = input.split(" ")
     val command = splitInput(0)
 
@@ -30,7 +30,7 @@ class TUI(controller:Controller) extends Observer {
        */
       case _
       => println("not a valid command!")
-
+  
   override def update: Unit =
     println(controller.toString)
 }

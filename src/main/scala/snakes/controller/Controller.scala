@@ -4,6 +4,25 @@ package controller
 import snakes.model.aGame
 import snakes.util.{Dice, Observable, UndoManager}
 
+trait Command{
+  def execute(): Unit
+}
+class CreateCommand(controller: Controller, size: Int) extends Command {
+  def execute(): Unit = controller.create(size)
+}
+
+class AddPlayerCommand(controller: Controller, name: String) extends Command {
+  def execute(): Unit = controller.addPlayer(name)
+}
+
+class RollCommand(controller: Controller) extends Command {
+  def execute(): Unit = controller.roll
+}
+class UnknownCommand extends Command {
+  def execute(): Unit = println("Not a valid command!")
+}
+
+
 case class Controller(var game: aGame) extends Observable {
   val undoManager = new UndoManager
 
