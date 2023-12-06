@@ -13,7 +13,6 @@ object SnakesAndLadders {
   val tui = TUI(controller)
   val gui = new GUI(controller)
 
-
   controller.notifyObservers(Event.Create)
 
   def main(args: Array[String]): Unit = {
