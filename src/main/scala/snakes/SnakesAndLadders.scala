@@ -1,6 +1,6 @@
 package snakes
 
-import aview.TUI
+import aview.{TUI, SwingGUI}
 import controller.Controller
 import model.aGame
 
@@ -10,6 +10,7 @@ object SnakesAndLadders {
   val game: aGame = aGame()
   val controller: Controller = Controller(game)
   val tui = TUI(controller)
+  val gui = new SwingGUI(controller)
   controller.notifyObservers
 
   def main(args: Array[String]): Unit = {

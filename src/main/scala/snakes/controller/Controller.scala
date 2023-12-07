@@ -2,7 +2,9 @@ package snakes
 package controller
 
 import snakes.model.aGame
-import snakes.util.{Dice, Observable}
+import snakes.util.{Dice, Observable, Observer}
+import snakes.aview.{TUI, SwingGUI}
+
 
 trait Command{
   def execute(): Unit
@@ -38,6 +40,10 @@ class UnknownCommand extends Command {
 case class Controller(var game: aGame) extends Observable {
 
   private val gameHistory = new GameHistory()
+
+  //def integrateGUI(gui: SwingGUI): Unit = {
+   // add(gui)
+  //}
 
 
   def start: aGame = {
