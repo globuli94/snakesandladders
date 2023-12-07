@@ -76,6 +76,7 @@ class GUI(controller: Controller) extends Frame with Observer {
     val playersContainer = new BoxPanel(Orientation.Vertical)
     // Add other components if needed, e.g., buttons, images, etc.
     controller.game.queue.foreach { element =>
+      println(element)
       val playerLayout = new FlowPanel {
         contents += new Button(element.name + ":" + element.position) {
           preferredSize = new Dimension(100,75)
@@ -147,7 +148,7 @@ class GUI(controller: Controller) extends Frame with Observer {
 
     // Load and scale images
     val snakeImage = new ImageIcon("SnakeIcon.png").getImage.getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)
-    val ladderImage = new ImageIcon("LadderIcon.jpg").getImage.getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)
+    val ladderImage = new ImageIcon("ladderIcon.png").getImage.getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)
     // Blank image for cases where neither snakes nor ladders are present
     val blankImage = new ImageIcon("blankImage.png").getImage.getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)
 
@@ -213,7 +214,7 @@ class GUI(controller: Controller) extends Frame with Observer {
       add(new Button(Action("Undo") {
         controller.undo()
       }), BorderPanel.Position.Center)
-      preferredSize = new Dimension(400, 50)
+      preferredSize = new Dimension(300, 50)
     }
   }
 
