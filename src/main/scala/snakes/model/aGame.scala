@@ -38,8 +38,10 @@ case class aGame(board:Board = Board.createBoard(100), queue: Queue[Player] = Qu
 
   override def toString: String =
     if(queue.isEmpty) {
-      "Please add Players:"
-    } else if(queue.last.position == 0) {
+      "Welcome to Snakes and Ladders" +
+        "\nPlease add Players using add(PLAYER NAME) or create a new game using create(SIZE)!" +
+          "\nStart the game rolling the Dice using <roll>"
+    } else if(queue.last.position == 1) {
       queue.last.name + " has been added to the Game!"
     } else if(board.size == queue.last.position) {
       queue.last.name + " has won the game!!!"

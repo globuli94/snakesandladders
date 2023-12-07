@@ -8,6 +8,7 @@ import scala.math.sqrt
 import java.awt.Color
 import javax.swing.{BorderFactory, BoxLayout, ImageIcon}
 import scala.swing.*
+import scala.swing.Swing.EmptyBorder
 import scala.swing.event.*
 
 
@@ -75,37 +76,54 @@ class GUI(controller: Controller) extends Frame with Observer {
     val playersContainer = new BoxPanel(Orientation.Vertical)
     // Add other components if needed, e.g., buttons, images, etc.
     controller.game.queue.foreach { element =>
-      println(element)
       val playerLayout = new FlowPanel {
-        contents += new Button(element.name + ":" + element.position)
+        contents += new Button(element.name + ":" + element.position) {
+          preferredSize = new Dimension(100,75)
+        }
         contents += new DotPanel(element.color)
       }
       playersContainer.contents += playerLayout
     }
     layout(playersContainer) = BorderPanel.Position.Center
-    preferredSize = new Dimension(150,300)
+    preferredSize = new Dimension(110,300)
   }
 
   // Panel for creating the Game Size
-  class SizeOptionPanel(controller: Controller) extends BoxPanel(Orientation.Horizontal) {
+  class SizeOptionPanel(controller: Controller) extends BoxPanel(Orientation.Vertical) {
+    contents += new FlowPanel {
+      contents += new Label("Select Board Size") {
+        font = new Font("SansSerif", 3, 16)
+      }
+    }
+    contents += new BoxPanel(Orientation.Horizontal) {
       contents += new BorderPanel {
         add(new Button(Action("4x4") {
           controller.create(4)
         }), BorderPanel.Position.Center)
-        preferredSize = new Dimension(200, 50)
+        preferredSize = new Dimension(175, 50)
       }
+
       contents += new BorderPanel {
         add(new Button(Action("6x6") {
           controller.create(6)
         }), BorderPanel.Position.Center)
-        preferredSize = new Dimension(200, 50)
+        preferredSize = new Dimension(175, 50)
       }
+
       contents += new BorderPanel {
         add(new Button(Action("8x8") {
           controller.create(8)
         }), BorderPanel.Position.Center)
-        preferredSize = new Dimension(200, 50)
+        preferredSize = new Dimension(175, 50)
       }
+
+      contents += new BorderPanel {
+        add(new Button(Action("10x10") {
+          controller.create(10)
+        }), BorderPanel.Position.Center)
+        preferredSize = new Dimension(175, 50)
+      }
+    }
   }
 
   class FieldGridPanel(controller: Controller) extends GridPanel(sqrt(controller.game.board.size).toInt, sqrt(controller.game.board.size).toInt) {
@@ -128,10 +146,10 @@ class GUI(controller: Controller) extends Frame with Observer {
     }
 
     // Load and scale images
-    val snakeImage = new ImageIcon("SnakeIcon.png").getImage.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH)
-    val ladderImage = new ImageIcon("LadderIcon.jpg").getImage.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH)
+    val snakeImage = new ImageIcon("SnakeIcon.png").getImage.getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)
+    val ladderImage = new ImageIcon("LadderIcon.jpg").getImage.getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)
     // Blank image for cases where neither snakes nor ladders are present
-    val blankImage = new ImageIcon("blankImage.png").getImage.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH)
+    val blankImage = new ImageIcon("blankImage.png").getImage.getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)
 
 
     // Create JLabels for displaying images
@@ -189,13 +207,13 @@ class GUI(controller: Controller) extends Frame with Observer {
       add(new Button(Action("Roll") {
         controller.roll()
       }), BorderPanel.Position.Center)
-      preferredSize = new Dimension(300, 50)
+      preferredSize = new Dimension(400, 50)
     }
     contents += new BorderPanel {
       add(new Button(Action("Undo") {
         controller.undo()
       }), BorderPanel.Position.Center)
-      preferredSize = new Dimension(300, 50)
+      preferredSize = new Dimension(400, 50)
     }
   }
 
