@@ -2,7 +2,17 @@ package snakes.model
 
 import scala.util.Random
 
-case class Board(size: Int, snakes: Map[Int, Int], ladders: Map[Int, Int])
+case class Board(size: Int, snakes: Map[Int, Int], ladders: Map[Int, Int]){
+  override def toString: String = {
+    val sb = new StringBuilder
+    sb.append(s"Board Size: $size\n")
+    sb.append("Snakes: \n")
+    snakes.foreach { case (start, end) => sb.append(s"  From $start to $end\n") }
+    sb.append("Ladders: \n")
+    ladders.foreach { case (start, end) => sb.append(s"  From $start to $end\n") }
+    sb.toString()
+  }
+}
 
 //Strategy:
 trait FeatureGenerationStrategy {

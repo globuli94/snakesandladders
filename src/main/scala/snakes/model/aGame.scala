@@ -32,17 +32,22 @@ case class aGame(board:Board = Board.createBoard(10), queue: Queue[Player] = Que
   def moveNextPlayer(roll: Int): aGame = {
     val (player, updatedQueue) = queue.dequeue
     var newPosition = player.position + roll
-
+    // Check if the new position hits a snake or ladder
+    val originalPosition = newPosition
     newPosition = board.snakes.getOrElse(newPosition, newPosition) // If landed on snake
+    if (newPosition < originalPosition) {
+      println(s"Oh no! ${player.name} hit a snake and moved from $originalPosition to $newPosition.")
+    }
     newPosition = board.ladders.getOrElse(newPosition, newPosition) // If landed on ladder
-
+    if (newPosition > originalPosition) {
+      println(s"Great! ${player.name} climbed a ladder and moved from $originalPosition to $newPosition.")
+    }
     newPosition = newPosition min board.size
-
     val updatedPlayer = player.moveTo(newPosition)
     val newQueue = updatedQueue.enqueue(updatedPlayer)
-
     aGame(board, newQueue)
   }
+
 
   override def toString: String =
     if (gameStarted) {
