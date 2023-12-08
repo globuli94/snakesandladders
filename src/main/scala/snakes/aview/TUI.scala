@@ -1,7 +1,7 @@
 package snakes
 package aview
 
-import util.Observer
+import util.{Event, Observer}
 import controller.Controller
 
 import scala.util.{Failure, Success, Try}
@@ -20,17 +20,24 @@ class TUI(controller:Controller) extends Observer {
       case "add" =>
         controller.addPlayer(splitInput(1))
       case "roll" => 
-        controller.roll
+        controller.roll()
       case "undo" =>
-        controller.undo
+        controller.undo()
       /*
       case "redo" =>
         controller.redo
 
        */
+      case "exit" =>
+        controller.exit()
       case _
       => println("not a valid command!")
 
-  override def update: Unit =
-    println(controller.toString)
+  override def update(e: Event): Unit =
+    e.match {
+      case Event.Roll => println(controller.toString)
+      case Event.Undo => println(controller.toString)
+      case Event.Create => println(controller.toString)
+      case Event.AddPlayer => println(controller.toString)
+    }
 }

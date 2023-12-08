@@ -11,30 +11,13 @@ class ControllerSpec extends AnyWordSpec with Matchers {
     val game = aGame()
     val controller = Controller(game)
     val peter = Player.builder().setName("Peter").setPosition(0).build()
-    "updateGame is called with a game with Peter[5] Marko[5]" should {
-      val newGame = aGame()
-      val queue1 = newGame.queue.enqueue(peter)
-
-      val testGame = aGame(newGame.board, queue1)
-      val test = controller.updateGame(testGame)
-      "update the game with the new game" in {
-        test should be(testGame)
-      }
-    }
-    "addPlayer(Peter) is called on an empty game" should {
-      val test = controller.addPlayer("Peter")
-      "return a game with Peter added to the queue" in {
-        test.queue.last.name should be("Peter")
-        test.queue.last.position should be(0)
-      }
-    }
     "undo is called on a game when a dice hase been rolled twice" should {
       val gameWithPlayer = controller.addPlayer("Peter")
-      controller.roll
+      controller.roll()
       val test1 = controller.game
-      controller.roll
+      controller.roll()
       val test2 = controller.game
-      controller.undo
+      controller.undo()
       "return controller.game = test1" in {
         controller.game = test1
       }

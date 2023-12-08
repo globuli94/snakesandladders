@@ -2,34 +2,30 @@ package snakes
 package controller
 
 import snakes.model.aGame
-import snakes.util.{Dice, Observable, UndoManager}
+import snakes.util.{Dice, Event, Observable, UndoManager}
 
 case class Controller(var game: aGame) extends Observable {
   val undoManager = new UndoManager
 
-  def create(size:Int): aGame = {
-    updateGame(game.createGame(size))
+  def create(size:Int): Unit = {
+    game = game.createGame(size)
+    notifyObservers(Event.Create)
   }
-  def addPlayer(name:String): aGame =
-    updateGame(game.createPlayer(name))
+  def addPlayer(name:String): Unit =
+    game = game.createPlayer(name)
+    notifyObservers(Event.AddPlayer)
 
-  def roll: Unit =
+  def roll(): Unit =
     undoManager.doStep(RollCommand(this, Dice().rollDice))
-    notifyObservers
+    notifyObservers(Event.Roll)
 
-  def undo: Unit =
+  def undo(): Unit =
     undoManager.undoStep()
-    notifyObservers
-  /*
-  def redo: Unit =
-    undoManager.redoStep()
-    notifyObservers
+    notifyObservers(Event.Undo)
 
-   */
-  def updateGame(updatedGame:aGame): aGame =
-    game = updatedGame
-    notifyObservers
-    game
+  def exit(): Unit = {
+    sys.exit(0)
+  }
 
   override def toString: String =
     game.toString

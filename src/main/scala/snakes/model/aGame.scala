@@ -6,7 +6,7 @@ import snakes.util.Dice
 
 import scala.collection.immutable.Queue
 
-case class aGame(board:Board = Board.createBoard(10), queue: Queue[Player] = Queue.empty) {
+case class aGame(board:Board = Board.createBoard(100), queue: Queue[Player] = Queue.empty) {
 
   def createGame(size: Int): aGame = {
     aGame(Board.createBoard(size*size))
@@ -15,7 +15,8 @@ case class aGame(board:Board = Board.createBoard(10), queue: Queue[Player] = Que
   def createPlayer(name: String): aGame = {
     val player = Player.builder()
       .setName(name)
-      .setPosition(0)
+      .setPosition(1)
+      .setColor(queue.size)
       .build()
     aGame(board, queue.enqueue(player))
   }
@@ -37,8 +38,10 @@ case class aGame(board:Board = Board.createBoard(10), queue: Queue[Player] = Que
 
   override def toString: String =
     if(queue.isEmpty) {
-      "Please add Players:"
-    } else if(queue.last.position == 0) {
+      "Welcome to Snakes and Ladders" +
+        "\nPlease add Players using add(PLAYER NAME) or create a new game using create(SIZE)!" +
+          "\nStart the game rolling the Dice using <roll>"
+    } else if(queue.last.position == 1) {
       queue.last.name + " has been added to the Game!"
     } else if(board.size == queue.last.position) {
       queue.last.name + " has won the game!!!"
