@@ -35,11 +35,9 @@ class TUI(controller:Controller) extends Observer {
 
   override def update(e: Event): Unit =
     e.match {
-      case Event.Exit => println("Thanks for Playing!")
       case Event.Roll => println(controller.toString)
       case Event.Undo => println(controller.toString)
       case Event.Create => println(controller.toString)
       case Event.AddPlayer => println(controller.toString)
-      case _ => println("Not a valid Command!")
     }
 }

@@ -23,7 +23,6 @@ class BoardSpec extends AnyWordSpec with Matchers {
       board.ladders.values.foreach(_ should be <= 10)
     }
 
-
     "handle edge cases like minimum size and no features" in {
       val smallBoard = Board.createBoard(1)
       smallBoard.snakes shouldBe empty

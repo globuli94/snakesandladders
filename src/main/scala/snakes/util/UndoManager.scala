@@ -21,17 +21,4 @@ class UndoManager {
       }
     }
   }
-  /*
-  def redoStep(): Option[Command] = {
-    redoStack match {
-      case Nil => None
-      case head :: stack => {
-        head.redoStep()
-        redoStack = stack
-        undoStack = head :: undoStack
-        Some(head)
-      }
-    }
-  }
-   */
 }

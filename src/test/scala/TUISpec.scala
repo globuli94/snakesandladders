@@ -32,9 +32,9 @@ class TUISpec extends AnyWordSpec with Matchers {
     "undo" should {
       "undo the last operation and call controller.undo" in {
         val gameWithPlayer = controller.addPlayer("Peter")
-        controller.roll
+        controller.roll()
         val test1 = controller.game
-        controller.roll
+        controller.roll()
         val test2 = controller.game
         tui.getInputAndPrintLoop("undo")
         controller.game should be (test1)
@@ -49,5 +49,6 @@ class TUISpec extends AnyWordSpec with Matchers {
         controller.game should be(controller.game)
       }
     }
+
   }
 }

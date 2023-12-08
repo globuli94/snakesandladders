@@ -206,7 +206,13 @@ class GUI(controller: Controller) extends Frame with Observer {
   class ControlPanel(controller: Controller) extends BoxPanel(Orientation.Horizontal) {
     contents += new BorderPanel {
       add(new Button(Action("Roll") {
-        controller.roll()
+        if(controller.game.queue.isEmpty) {
+          Dialog.showMessage(null, "Add Players first!", "Error", Dialog.Message.Plain, Swing.EmptyIcon)
+        } else if(controller.game.queue.last.position == controller.game.board.size) {
+          Dialog.showMessage(null,controller.game.queue.last.name +" has won the game!", "Winner", Dialog.Message.Plain, Swing.EmptyIcon)
+        } else {
+          controller.roll()
+        }
       }), BorderPanel.Position.Center)
       preferredSize = new Dimension(400, 50)
     }
@@ -241,7 +247,6 @@ class GUI(controller: Controller) extends Frame with Observer {
       case Event.Roll =>
         contents = updateContents()
         repaint()
-      case Event.Exit =>
   }
 }
 

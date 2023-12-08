@@ -14,7 +14,6 @@ trait Observable {
 }
 
 enum Event {
-  case Exit
   case Create
   case AddPlayer
   case Roll

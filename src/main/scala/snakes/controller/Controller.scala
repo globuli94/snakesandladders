@@ -11,10 +11,10 @@ case class Controller(var game: aGame) extends Observable {
     game = game.createGame(size)
     notifyObservers(Event.Create)
   }
-  def addPlayer(name:String): Unit = 
+  def addPlayer(name:String): Unit =
     game = game.createPlayer(name)
     notifyObservers(Event.AddPlayer)
-  
+
   def roll(): Unit =
     undoManager.doStep(RollCommand(this, Dice().rollDice))
     notifyObservers(Event.Roll)
@@ -22,14 +22,8 @@ case class Controller(var game: aGame) extends Observable {
   def undo(): Unit =
     undoManager.undoStep()
     notifyObservers(Event.Undo)
-  /*
-  def redo: Unit =
-    undoManager.redoStep()
-    notifyObservers
 
-   */
   def exit(): Unit = {
-    notifyObservers(Event.Exit)
     sys.exit(0)
   }
 
