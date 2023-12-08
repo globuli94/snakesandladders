@@ -3,7 +3,7 @@ package snakes.aview
 import scala.swing.*
 import scala.swing.event.*
 import java.awt.{Color, Dimension, Toolkit}
-import snakes.controller.Controller
+import snakes.controller.{Controller, RollCommand}
 import snakes.util.Observer
 
 import javax.swing.BorderFactory
@@ -25,7 +25,7 @@ class SwingGUI(controller: Controller) extends MainFrame {
   val blues = Array(new Color(10, 70, 200), new Color(0, 100, 150), new Color(20, 100, 200), new Color(0, 40, 170))
 
   //  components
-  val welcomeLabel = new Label("Welcome to Snakes and Ladders!") {
+  val welcomeLabel = new Label("Snakes and Ladders!") {
     font = new Font("Arial", java.awt.Font.BOLD, 18)
   }
   val boardSizeLabel = new Label("Board Size:") {
@@ -34,6 +34,9 @@ class SwingGUI(controller: Controller) extends MainFrame {
   val customSizeTextField = new TextField {
     preferredSize = new Dimension(120, 30)
     border = BorderFactory.createLineBorder(borderColor)
+  }
+  val playerNameLabel = new Label("Player Name") {
+    font = new Font("Arial", java.awt.Font.PLAIN, 12)
   }
   val playerNameTextField = new TextField {
     preferredSize = new Dimension(120, 30)
@@ -46,7 +49,7 @@ class SwingGUI(controller: Controller) extends MainFrame {
     borderPainted = false
     opaque = true
   }
-  val createButton = new Button("Create Board") {
+  val createButton = new Button("Create") {
     background = buttonColor
     foreground = textColor
     preferredSize = new Dimension(120, 30)
@@ -60,6 +63,22 @@ class SwingGUI(controller: Controller) extends MainFrame {
     borderPainted = false
     opaque = true
   }
+  val rollButton = new Button("Roll") {
+    background = buttonColor
+    foreground = textColor
+    preferredSize = new Dimension(120, 30)
+    borderPainted = false
+    opaque = true
+    visible = false
+  }
+  val undoButton = new Button("Undo") {
+    background = buttonColor
+    foreground = textColor
+    preferredSize = new Dimension(120, 30)
+    borderPainted = false
+    opaque = true
+    visible = false
+  }
   val boardPanel = new GridPanel(8, 8) {
     preferredSize = new Dimension(400, 400)
     border = BorderFactory.createLineBorder(Color.BLACK)
@@ -71,27 +90,43 @@ class SwingGUI(controller: Controller) extends MainFrame {
     boardPanel.columns = boardSize
     boardPanel.contents.clear()
 
+    val snakes = controller.getSnakes // Map where key is the head of the snake
+    val ladders = controller.getLadders // Map where key is the start of the ladder
+
     val totalSquares = boardSize * boardSize
     for (i <- 1 to totalSquares) {
       val colorIndex = (i - 1) % 4
-      val squarePanel = new BorderPanel {
+      val squarePanel = new BoxPanel(Orientation.Vertical) {
         background = if (i % 2 == 0) greens(colorIndex) else blues(colorIndex)
-        preferredSize = new Dimension(50, 50) // Adjust the size based on actual requirements
+        preferredSize = new Dimension(50, 50)
+        opaque = true
       }
 
-      // square numbers
-      val label = new Label(i.toString) {
+      // Number label
+      val numberLabel = new Label(i.toString) {
         foreground = Color.BLACK
         font = new Font("Arial", java.awt.Font.BOLD, if (boardSize < 10) 18 else 12)
+      }
+      squarePanel.contents += numberLabel
+
+      // Marker label for snake or ladder
+      val markerLabel = new Label {
+        foreground = Color.BLACK
+        font = new Font("Arial", java.awt.Font.BOLD, if (boardSize < 10) 18 else 12)
+        text = (snakes.get(i).map(_ => "X") orElse ladders.get(i).map(_ => "O")).getOrElse("")
         opaque = false
       }
-      squarePanel.layout(label) = BorderPanel.Position.Center
+      if (markerLabel.text.nonEmpty) {
+        squarePanel.contents += markerLabel
+      }
+
       boardPanel.contents += squarePanel
     }
 
     boardPanel.revalidate()
     boardPanel.repaint()
   }
+
 
   // Observer update method
   def update: Unit = {
@@ -105,7 +140,8 @@ class SwingGUI(controller: Controller) extends MainFrame {
     layout(boardPanel) = BorderPanel.Position.Center
     layout(new BoxPanel(Orientation.Vertical) {
       contents += new FlowPanel(boardSizeLabel, customSizeTextField, createButton)
-      contents += new FlowPanel(new Label("Player Name:"), playerNameTextField, addPlayerButton)
+      contents += new FlowPanel(playerNameLabel, playerNameTextField, addPlayerButton)
+      contents += new FlowPanel(rollButton, undoButton)
       contents += startButton
       border = Swing.EmptyBorder(10)
     }) = BorderPanel.Position.South
@@ -120,6 +156,18 @@ class SwingGUI(controller: Controller) extends MainFrame {
 
     case ButtonClicked(`startButton`) =>
       controller.start
+      // Hide setup components
+      customSizeTextField.visible = false
+      playerNameTextField.visible = false
+      addPlayerButton.visible = false
+      createButton.visible = false
+      startButton.visible = false
+      boardSizeLabel.visible = false
+      playerNameLabel.visible = false
+
+      // Show game components
+      rollButton.visible = true
+      undoButton.visible = true
   }
   listenTo(createButton)
   reactions += {
@@ -129,6 +177,17 @@ class SwingGUI(controller: Controller) extends MainFrame {
       }
       controller.create(size)
       updateBoard(size)
+  }
+  listenTo(rollButton, undoButton)
+  reactions += {
+    case ButtonClicked(`rollButton`) =>
+      controller.roll
+      controller.saveState
+    // Update the board or any other components as needed
+
+    case ButtonClicked(`undoButton`) =>
+      controller.undo
+    // Update the board or any other components as needed
   }
   centerOnScreen()
   open()

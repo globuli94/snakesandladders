@@ -41,11 +41,8 @@ case class Controller(var game: aGame) extends Observable {
 
   private val gameHistory = new GameHistory()
 
-  //def integrateGUI(gui: SwingGUI): Unit = {
-   // add(gui)
-  //}
-
-
+  def getSnakes: Map[Int, Int] = game.board.snakes
+  def getLadders: Map[Int, Int] = game.board.ladders
   def start: aGame = {
     if (!game.gameStarted) {
       game = game.startGame

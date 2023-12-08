@@ -14,3 +14,12 @@ class Observable {
   def notifyObservers = subscribers.foreach(o => o.update)
 
 }
+enum Event {
+  case Exit
+  case Create
+  case AddPlayer
+  case Roll
+  case Undo
+  case Redo
+  case Start
+}
