@@ -49,6 +49,10 @@ class SwingGUI(controller: Controller) extends MainFrame {
     borderPainted = false
     opaque = true
   }
+  val playerInfoPanel = new BoxPanel(Orientation.Vertical) {
+    preferredSize = new Dimension(200, 400)
+    border = BorderFactory.createTitledBorder("Players")
+  }
   val createButton = new Button("Create") {
     background = buttonColor
     foreground = textColor
@@ -127,17 +131,46 @@ class SwingGUI(controller: Controller) extends MainFrame {
     boardPanel.repaint()
   }
 
+  def updatePlayerInfo(): Unit = {
+    playerInfoPanel.contents.clear()
+    val queue = controller.game.queue
+    val currentPlayer = queue.head
+    val otherPlayers = queue.tail
+
+    // Display current player with position
+    val currentPlayerLabel = new Label(s"${currentPlayer.name} (Position: ${currentPlayer.position})") {
+      foreground = Color.RED // Highlight current player, for example
+      font = new Font("Arial", java.awt.Font.BOLD, 12)
+    }
+    playerInfoPanel.contents += currentPlayerLabel
+
+    // Display other players with position
+    otherPlayers.foreach { player =>
+      val playerLabel = new Label(s"${player.name} (Position: ${player.position})") {
+        foreground = Color.BLUE // Standard color for other players
+        font = new Font("Arial", java.awt.Font.PLAIN, 12)
+      }
+      playerInfoPanel.contents += playerLabel
+    }
+
+    playerInfoPanel.revalidate()
+    playerInfoPanel.repaint()
+  }
+
 
   // Observer update method
   def update: Unit = {
     val currentBoardSize = controller.game.board.size
     updateBoard(currentBoardSize)
+    updatePlayerInfo()
+
   }
 
   // Layout
   contents = new BorderPanel {
     layout(welcomeLabel) = BorderPanel.Position.North
     layout(boardPanel) = BorderPanel.Position.Center
+    layout(playerInfoPanel) = BorderPanel.Position.East
     layout(new BoxPanel(Orientation.Vertical) {
       contents += new FlowPanel(boardSizeLabel, customSizeTextField, createButton)
       contents += new FlowPanel(playerNameLabel, playerNameTextField, addPlayerButton)
@@ -150,9 +183,10 @@ class SwingGUI(controller: Controller) extends MainFrame {
   // Event Listeners
   listenTo(addPlayerButton, startButton)
   reactions += {
-    case ButtonClicked(`addPlayerButton`) =>
+    case ButtonClicked(`addPlayerButton`) if playerNameTextField.text.nonEmpty =>
       controller.addPlayer(playerNameTextField.text)
-      playerNameTextField.text = ""
+      playerNameTextField.text = "" // Clear the text field
+      updatePlayerInfo() // Update player info panel
 
     case ButtonClicked(`startButton`) =>
       controller.start
@@ -183,7 +217,7 @@ class SwingGUI(controller: Controller) extends MainFrame {
     case ButtonClicked(`rollButton`) =>
       controller.roll
       controller.saveState
-    // Update the board or any other components as needed
+      updatePlayerInfo() // Update player info panel after rolling
 
     case ButtonClicked(`undoButton`) =>
       controller.undo
