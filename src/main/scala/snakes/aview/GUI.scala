@@ -11,10 +11,10 @@ import scala.swing.*
 import scala.swing.Swing.EmptyBorder
 import scala.swing.event.*
 
-
+// main frame
 class GUI(controller: Controller) extends Frame with Observer {
   controller.add(this)
-  // Menu Bar with AddPlayer and Exit
+  // menubar with AddPlayer and Exit
   title = "Snakes and Ladders"
   menuBar = new MenuBar {
     contents += new Menu("Game") {
@@ -44,7 +44,7 @@ class GUI(controller: Controller) extends Frame with Observer {
   centerOnScreen()
   open()
 
-  def updateContents() = {
+  private def updateContents() = {
     new BorderPanel {
       add(new FlowPanel {
         contents += new SizeOptionPanel(controller)
@@ -59,9 +59,9 @@ class GUI(controller: Controller) extends Frame with Observer {
   }
 
   // Player Panel
-  class PlayerPanel(controller: Controller) extends BorderPanel {
+  private class PlayerPanel(controller: Controller) extends BorderPanel {
     // Create a label for displaying text
-    val playerInfoText = new BoxPanel(Orientation.Vertical) {
+    private val playerInfoText = new BoxPanel(Orientation.Vertical) {
       contents += new Label(" Players") {
         font = new Font("SansSerif", 3, 20)
       }
@@ -70,10 +70,9 @@ class GUI(controller: Controller) extends Frame with Observer {
         font = new Font("SansSerif", 3, 16)
       }
     }
-
     layout(playerInfoText) = BorderPanel.Position.North
 
-    val playersContainer = new BoxPanel(Orientation.Vertical)
+    private val playersContainer = new BoxPanel(Orientation.Vertical)
     // Add other components if needed, e.g., buttons, images, etc.
     controller.game.queue.foreach { element =>
       println(element)
@@ -127,17 +126,19 @@ class GUI(controller: Controller) extends Frame with Observer {
     }
   }
 
-  class FieldGridPanel(controller: Controller) extends GridPanel(sqrt(controller.game.board.size).toInt, sqrt(controller.game.board.size).toInt) {
+  private class FieldGridPanel(controller: Controller) extends GridPanel(sqrt(controller.game.board.size).toInt, sqrt(controller.game.board.size).toInt) {
     contents ++= (1 to controller.game.board.size).map { i =>
         new FieldPanel(controller, i)
     }
   }
 
-  class FieldPanel(controller: Controller, field: Int) extends BorderPanel {
-    // field number
-    val label = new Label(field.toString)
+  // creating a single field (field number, players on the field, and)
+  private class FieldPanel(controller: Controller, field: Int) extends BorderPanel {
+    // field number and adds it to the bottom of the field
+    private val label = new Label(field.toString)
+    layout(label) = BorderPanel.Position.South
 
-    // colors for player positions
+    // loops through player queue and adds a dot if player position == field position
     val playerDots = new BoxPanel(Orientation.Horizontal) {
       controller.game.queue.foreach { element =>
         if (element.position == field) {
@@ -145,32 +146,23 @@ class GUI(controller: Controller) extends Frame with Observer {
         }
       }
     }
-
-    // Load and scale images
-    val snakeImage = new ImageIcon("SnakeIcon.png").getImage.getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)
-    val ladderImage = new ImageIcon("ladderIcon.png").getImage.getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)
-    // Blank image for cases where neither snakes nor ladders are present
-    val blankImage = new ImageIcon("blankImage.png").getImage.getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)
-
-
-    // Create JLabels for displaying images
-    val snakeLabel = new Label {
-      icon = new ImageIcon(snakeImage)
-    }
-    val ladderLabel = new Label {
-      icon = new ImageIcon(ladderImage)
-    }
-    val blankLabel = new Label {
-      icon = new ImageIcon(ladderImage)
-    }
-    val emptyLabel = new Label {
-      preferredSize = new Dimension(25,25)
-    }
-
-
-    layout(label) = BorderPanel.Position.South
     layout(playerDots) = BorderPanel.Position.Center
 
+    // Icons for Snakes and Ladders
+    // Load and scale Snake and Ladder Icons
+    private val snakeImage = new ImageIcon("SnakeIcon.png").getImage.getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)
+    private val ladderImage = new ImageIcon("ladderIcon.png").getImage.getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)
+    // Create Labels for displaying icons (icons need to be encapsulated so that they can be added to a field)
+    private val snakeLabel = new Label {
+      icon = new ImageIcon(snakeImage)
+    }
+    private val ladderLabel = new Label {
+      icon = new ImageIcon(ladderImage)
+    }
+    private val emptyLabel = new Label {
+      preferredSize = new Dimension(25,25)
+    }
+    // adds image icons to bottom of field by checking if field contains a snake or ladder
     if (controller.game.board.snakes.contains(field)) {
       layout(snakeLabel) = BorderPanel.Position.North
     } else if (controller.game.board.ladders.contains(field)) {
@@ -179,11 +171,12 @@ class GUI(controller: Controller) extends Frame with Observer {
       layout(emptyLabel) = BorderPanel.Position.North
     }
 
+    // sets preferred size of field and adds a border around the field
     preferredSize = new Dimension(60, 60)
     border = BorderFactory.createLineBorder(Color.BLACK, 1)
   }
 
-  class DotPanel(dotColor: Color) extends Panel {
+  private class DotPanel(dotColor: Color) extends Panel {
     // Set the preferred size for the DotPanel
     preferredSize = new Dimension(20, 20)
 
@@ -203,7 +196,7 @@ class GUI(controller: Controller) extends Frame with Observer {
     }
   }
 
-  class ControlPanel(controller: Controller) extends BoxPanel(Orientation.Horizontal) {
+  private class ControlPanel(controller: Controller) extends BoxPanel(Orientation.Horizontal) {
     contents += new BorderPanel {
       add(new Button(Action("Roll") {
         if(controller.game.queue.isEmpty) {
@@ -224,30 +217,11 @@ class GUI(controller: Controller) extends Frame with Observer {
     }
   }
 
-  def linearIndexToCustomOrder(size: Int, linearIndex: Int): Int = {
-    val totalIndices = size * size
-    val reversedIndex = totalIndices - 1 - linearIndex
-    val row = reversedIndex / size
-    val col = reversedIndex % size
-    val customOrderIndex = col * size + row
-    customOrderIndex
-  }
-
   def update(e: Event): Unit = {
-    e match
-      case Event.Create =>
+    e match {
+      case Event.Create | Event.AddPlayer | Event.Undo | Event.Roll =>
         contents = updateContents()
         repaint()
-      case Event.AddPlayer =>
-        contents = updateContents()
-        repaint()
-      case Event.Undo =>
-        contents = updateContents()
-        repaint()
-      case Event.Roll =>
-        contents = updateContents()
-        repaint()
+    }
   }
 }
-
-
