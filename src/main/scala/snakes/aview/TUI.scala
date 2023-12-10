@@ -19,6 +19,8 @@ class TUI(controller:Controller) extends Observer {
         case Failure(_) => new IllegalArgumentException("Invalid command")
       case "add" =>
         controller.addPlayer(splitInput(1))
+      case "start" =>
+        controller.start
       case "roll" => 
         controller.roll()
       case "undo" =>
@@ -34,10 +36,11 @@ class TUI(controller:Controller) extends Observer {
       => println("not a valid command!")
 
   override def update(e: Event): Unit =
-    e.match {
+    e match {
       case Event.Roll => println(controller.toString)
       case Event.Undo => println(controller.toString)
       case Event.Create => println(controller.toString)
       case Event.AddPlayer => println(controller.toString)
+      case Event.Start => println("Game started, please roll the dice.\n" + controller.toString) // Add this line
     }
 }

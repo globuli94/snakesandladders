@@ -6,7 +6,9 @@ import snakes.util.Dice
 
 import scala.collection.immutable.Queue
 
-case class aGame(board:Board = Board.createBoard(100), queue: Queue[Player] = Queue.empty) {
+case class aGame(board:Board = Board.createBoard(100), queue: Queue[Player] = Queue.empty, gameStarted: Boolean = false) {
+
+  def startGame: aGame = copy(gameStarted = true)
 
   def createGame(size: Int): aGame = {
     aGame(Board.createBoard(size*size))
@@ -37,11 +39,12 @@ case class aGame(board:Board = Board.createBoard(100), queue: Queue[Player] = Qu
   }
 
   override def toString: String =
-    if(queue.isEmpty) {
+    if(!gameStarted) {
       "Welcome to Snakes and Ladders" +
         "\nPlease add Players using add(PLAYER NAME) or create a new game using create(SIZE)!" +
           "\nStart the game rolling the Dice using <roll>"
-    } else if(queue.last.position == 1) {
+
+    }  else if(queue.last.position == 1) {
       queue.last.name + " has been added to the Game!"
     } else if(board.size == queue.last.position) {
       queue.last.name + " has won the game!!!"

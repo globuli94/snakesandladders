@@ -18,4 +18,5 @@ enum Event {
   case AddPlayer
   case Roll
   case Undo
+  case Start
 }

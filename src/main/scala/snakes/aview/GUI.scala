@@ -222,6 +222,10 @@ class GUI(controller: Controller) extends Frame with Observer {
       case Event.Create | Event.AddPlayer | Event.Undo | Event.Roll =>
         contents = updateContents()
         repaint()
+      case Event.Start =>
+        Dialog.showMessage(contents.head, "Game started, please roll the dice.", title = "Game Started")
+        contents = updateContents()
+        repaint()
     }
   }
 }

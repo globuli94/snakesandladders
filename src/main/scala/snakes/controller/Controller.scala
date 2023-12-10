@@ -7,6 +7,13 @@ import snakes.util.{Dice, Event, Observable, UndoManager}
 case class Controller(var game: aGame) extends Observable {
   val undoManager = new UndoManager
 
+  def start: aGame = {
+    if (!game.gameStarted) {
+      game = game.startGame
+      notifyObservers(Event.Start)
+    }
+    game
+  }
   def create(size:Int): Unit = {
     game = game.createGame(size)
     notifyObservers(Event.Create)
