@@ -38,6 +38,34 @@ class GUI(controller: Controller) extends Frame with Observer {
       })
     }
   }
+  lazy val startButton: Button = new Button {
+    action = Action("Start") {
+      undoButton.visible = true
+      rollButton.visible = true
+      startButton.visible = false
+      controller.start
+    }
+    visible = true
+  }
+  lazy val undoButton: Button = new Button {
+    action = Action("Undo") {
+      controller.undo()
+    }
+    visible = false
+  }
+
+  lazy val rollButton: Button = new Button {
+    action = Action("Roll") {
+      if (controller.game.queue.isEmpty) {
+        Dialog.showMessage(null, "Add Players first!", "Error", Dialog.Message.Plain, Swing.EmptyIcon)
+      } else if (controller.game.queue.last.position == controller.game.board.size) {
+        Dialog.showMessage(null, controller.game.queue.last.name + " has won the game!", "Winner", Dialog.Message.Plain, Swing.EmptyIcon)
+      } else {
+        controller.roll()
+      }
+    }
+    visible = false
+  }
 
   contents = updateContents()
   pack()
@@ -53,8 +81,8 @@ class GUI(controller: Controller) extends Frame with Observer {
       add(new FieldGridPanel(controller), BorderPanel.Position.Center)
       add(new PlayerPanel(controller), BorderPanel.Position.West)
       add(new FlowPanel {
-          contents += new ControlPanel(controller)
-        }, BorderPanel.Position.South)
+        contents += new ControlPanel(controller)
+      }, BorderPanel.Position.South)
     }
   }
 
@@ -128,7 +156,7 @@ class GUI(controller: Controller) extends Frame with Observer {
 
   private class FieldGridPanel(controller: Controller) extends GridPanel(sqrt(controller.game.board.size).toInt, sqrt(controller.game.board.size).toInt) {
     contents ++= (1 to controller.game.board.size).map { i =>
-        new FieldPanel(controller, i)
+      new FieldPanel(controller, i)
     }
   }
 
@@ -198,22 +226,16 @@ class GUI(controller: Controller) extends Frame with Observer {
 
   private class ControlPanel(controller: Controller) extends BoxPanel(Orientation.Horizontal) {
     contents += new BorderPanel {
-      add(new Button(Action("Roll") {
-        if(controller.game.queue.isEmpty) {
-          Dialog.showMessage(null, "Add Players first!", "Error", Dialog.Message.Plain, Swing.EmptyIcon)
-        } else if(controller.game.queue.last.position == controller.game.board.size) {
-          Dialog.showMessage(null,controller.game.queue.last.name +" has won the game!", "Winner", Dialog.Message.Plain, Swing.EmptyIcon)
-        } else {
-          controller.roll()
-        }
-      }), BorderPanel.Position.Center)
+      layout(rollButton) = BorderPanel.Position.South
       preferredSize = new Dimension(400, 50)
     }
     contents += new BorderPanel {
-      add(new Button(Action("Undo") {
-        controller.undo()
-      }), BorderPanel.Position.Center)
+      layout(undoButton) = BorderPanel.Position.South
       preferredSize = new Dimension(300, 50)
+    }
+    contents += new BorderPanel {
+      layout(startButton) = BorderPanel.Position.Center
+      preferredSize = new Dimension(400, 50)
     }
   }
 
