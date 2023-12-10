@@ -41,6 +41,6 @@ class TUI(controller:Controller) extends Observer {
       case Event.Undo => println(controller.toString)
       case Event.Create => println(controller.toString)
       case Event.AddPlayer => println(controller.toString)
-      case Event.Start => println("Game started, please roll the dice.\n" + controller.toString) // Add this line
+      case Event.Start => println(controller.toString)
     }
 }
