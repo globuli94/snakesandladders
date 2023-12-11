@@ -27,8 +27,8 @@ case class aGame(board:Board = Board.createBoard(100), queue: Queue[Player] = Qu
     val (player, updatedQueue) = queue.dequeue
     var newPosition = player.position + roll
 
-    newPosition = board.snakes.getOrElse(newPosition, newPosition) // If landed on snake
-    newPosition = board.ladders.getOrElse(newPosition, newPosition) // If landed on ladder
+    newPosition = board.snakes.getOrElse(newPosition, newPosition)
+    newPosition = board.ladders.getOrElse(newPosition, newPosition)
 
     newPosition = newPosition min board.size
 

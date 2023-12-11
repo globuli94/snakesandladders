@@ -38,11 +38,46 @@ class GUI(controller: Controller) extends Frame with Observer {
       })
     }
   }
+  lazy val boardSizeLabel = new FlowPanel {
+    contents += new Label("Select Board Size") {
+      font = new Font("SansSerif", 3, 16)
+    }
+  }
+  lazy val fourButton = new BorderPanel {
+    add(new Button(Action("4x4") {
+      controller.create(4)
+    }), BorderPanel.Position.Center)
+    preferredSize = new Dimension(175, 50)
+  }
+  lazy val sixButton = new BorderPanel {
+    add(new Button(Action("6x6") {
+      controller.create(6)
+    }), BorderPanel.Position.Center)
+    preferredSize = new Dimension(175, 50)
+  }
+  lazy val eightButton = new BorderPanel {
+    add(new Button(Action("8x8") {
+      controller.create(8)
+    }), BorderPanel.Position.Center)
+    preferredSize = new Dimension(175, 50)
+  }
+  lazy val tenButton = new BorderPanel {
+    add(new Button(Action("10x10") {
+      controller.create(10)
+    }), BorderPanel.Position.Center)
+    preferredSize = new Dimension(175, 50)
+  }
   lazy val startButton: Button = new Button {
     action = Action("Start") {
       undoButton.visible = true
       rollButton.visible = true
       startButton.visible = false
+      boardSizeLabel.visible = false
+      fourButton.visible = false
+      sixButton.visible = false
+      eightButton.visible = false
+      tenButton.visible = false
+
       controller.start
     }
     visible = true
@@ -118,39 +153,15 @@ class GUI(controller: Controller) extends Frame with Observer {
 
   // Panel for creating the Game Size
   class SizeOptionPanel(controller: Controller) extends BoxPanel(Orientation.Vertical) {
-    contents += new FlowPanel {
-      contents += new Label("Select Board Size") {
-        font = new Font("SansSerif", 3, 16)
-      }
-    }
+    contents += boardSizeLabel
     contents += new BoxPanel(Orientation.Horizontal) {
-      contents += new BorderPanel {
-        add(new Button(Action("4x4") {
-          controller.create(4)
-        }), BorderPanel.Position.Center)
-        preferredSize = new Dimension(175, 50)
-      }
+      contents += fourButton
 
-      contents += new BorderPanel {
-        add(new Button(Action("6x6") {
-          controller.create(6)
-        }), BorderPanel.Position.Center)
-        preferredSize = new Dimension(175, 50)
-      }
+      contents += sixButton
 
-      contents += new BorderPanel {
-        add(new Button(Action("8x8") {
-          controller.create(8)
-        }), BorderPanel.Position.Center)
-        preferredSize = new Dimension(175, 50)
-      }
+      contents += eightButton
 
-      contents += new BorderPanel {
-        add(new Button(Action("10x10") {
-          controller.create(10)
-        }), BorderPanel.Position.Center)
-        preferredSize = new Dimension(175, 50)
-      }
+      contents += tenButton
     }
   }
 
@@ -224,18 +235,20 @@ class GUI(controller: Controller) extends Frame with Observer {
     }
   }
 
-  private class ControlPanel(controller: Controller) extends BoxPanel(Orientation.Horizontal) {
-    contents += new BorderPanel {
-      layout(rollButton) = BorderPanel.Position.South
-      preferredSize = new Dimension(400, 50)
-    }
-    contents += new BorderPanel {
-      layout(undoButton) = BorderPanel.Position.South
-      preferredSize = new Dimension(300, 50)
-    }
+  private class ControlPanel(controller: Controller) extends BoxPanel(Orientation.Vertical) {
     contents += new BorderPanel {
       layout(startButton) = BorderPanel.Position.Center
       preferredSize = new Dimension(400, 50)
+    }
+    contents += new BoxPanel(Orientation.Horizontal) {
+      contents += new BorderPanel {
+        layout(rollButton) = BorderPanel.Position.Center
+        preferredSize = new Dimension(400, 50)
+      }
+      contents += new BorderPanel {
+        layout(undoButton) = BorderPanel.Position.Center
+        preferredSize = new Dimension(300, 50)
+      }
     }
   }
 
