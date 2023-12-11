@@ -171,10 +171,28 @@ class GUI(controller: Controller) extends Frame with Observer {
   }
 
   private class FieldGridPanel(controller: Controller) extends GridPanel(sqrt(controller.game.board.size).toInt, sqrt(controller.game.board.size).toInt) {
-    contents ++= (1 to controller.game.board.size).map { i =>
-      new FieldPanel(controller, i)
+    val boardSize = sqrt(controller.game.board.size).toInt
+
+    //zigzag, starting from bottom
+    for (row <- 0 until boardSize) {
+      val base = (boardSize - row - 1) * boardSize
+      if (row % 2 == 0) {
+        //right to left
+        for (col <- (0 until boardSize).reverse) {
+          val fieldNumber = base + col + 1
+          contents += new FieldPanel(controller, fieldNumber)
+        }
+      } else {
+        //left to right
+        for (col <- 0 until boardSize) {
+          val fieldNumber = base + col + 1
+          contents += new FieldPanel(controller, fieldNumber)
+        }
+      }
     }
   }
+
+
 
   // creating a single field (field number, players on the field, and)
   private class FieldPanel(controller: Controller, field: Int) extends BorderPanel {
