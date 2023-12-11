@@ -29,14 +29,14 @@ case class aGame(board:Board = Board.createBoard(100), queue: Queue[Player] = Qu
 
     newPosition = board.snakes.getOrElse(newPosition, newPosition)
     newPosition = board.ladders.getOrElse(newPosition, newPosition)
-
     newPosition = newPosition min board.size
 
-    val updatedPlayer = player.moveTo(newPosition)
+    val updatedPlayer = player.moveTo(newPosition, roll)
     val newQueue = updatedQueue.enqueue(updatedPlayer)
 
-    aGame(board, newQueue)
+    aGame(board, newQueue, gameStarted)
   }
+
 
   override def toString: String =
     if(!gameStarted && queue.isEmpty) {
@@ -49,7 +49,8 @@ case class aGame(board:Board = Board.createBoard(100), queue: Queue[Player] = Qu
     } else if(board.size == queue.last.position && gameStarted) {
       queue.last.name + " has won the game!!!"
     } else {
-      val stringBuilder = new StringBuilder("---------------------------\nPlayers: ")
+      val stringBuilder = new StringBuilder("---------------------------\n" + queue.last.name + "  rolled a " + queue.last.lastRoll)
+      stringBuilder.append("\nPlayers: ")
       queue.foreach(element =>
         stringBuilder.append(element.name + "[")
         stringBuilder.append(element.position + "] ")

@@ -3,13 +3,13 @@ package snakes.model
 import java.awt.Color
 import scala.swing.Color
 
-case class Player private (name: String, position: Int, color: Color) {
-  def moveTo(x: Int): Player = {
-    Player(name, x, color)
+case class Player private (name: String, position: Int, color: Color, lastRoll: Int = 0) {
+  def moveTo(x: Int, newLastRoll: Int): Player = {
+    Player(name, x, color, newLastRoll)
   }
 }
 object Player {
-  class Builder(private var name: String = "", private var position: Int = 0, private var color: Color = new Color(128, 128, 128)) {
+  class Builder(private var name: String = "", private var position: Int = 1, private var color: Color = new Color(128, 128, 128), private var lastRoll: Int = 0) {
     def setName(newName: String): Builder = {
       name = newName
       this
@@ -33,7 +33,7 @@ object Player {
     }
 
     def build(): Player = {
-      new Player(name, position, color)
+      new Player(name, position, color, lastRoll)
     }
   }
   def builder(): Builder = new Builder()
