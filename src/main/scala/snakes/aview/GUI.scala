@@ -71,12 +71,14 @@ class GUI(controller: Controller) extends Frame with Observer {
     action = Action("Start") {
       undoButton.visible = true
       rollButton.visible = true
+      rollResultLabel.visible = true
       startButton.visible = false
       boardSizeLabel.visible = false
       fourButton.visible = false
       sixButton.visible = false
       eightButton.visible = false
       tenButton.visible = false
+
 
       controller.start
     }
@@ -99,6 +101,9 @@ class GUI(controller: Controller) extends Frame with Observer {
         controller.roll()
       }
     }
+    visible = false
+  }
+  private val rollResultLabel = new Button(""){
     visible = false
   }
 
@@ -246,6 +251,10 @@ class GUI(controller: Controller) extends Frame with Observer {
         preferredSize = new Dimension(400, 50)
       }
       contents += new BorderPanel {
+        layout(rollResultLabel) = BorderPanel.Position.Center
+        preferredSize = new Dimension(50, 50)
+      }
+      contents += new BorderPanel {
         layout(undoButton) = BorderPanel.Position.Center
         preferredSize = new Dimension(300, 50)
       }
@@ -254,7 +263,10 @@ class GUI(controller: Controller) extends Frame with Observer {
 
   def update(e: Event): Unit = {
     e match {
-      case Event.Create | Event.AddPlayer | Event.Undo | Event.Roll =>
+      case Event.Create | Event.AddPlayer | Event.Undo =>
+        contents = updateContents()
+        repaint()
+      case Event.Roll(rollResult) =>  rollResultLabel.text = s"$rollResult"
         contents = updateContents()
         repaint()
       case Event.Start =>

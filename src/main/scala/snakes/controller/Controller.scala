@@ -23,8 +23,9 @@ case class Controller(var game: aGame) extends Observable {
     notifyObservers(Event.AddPlayer)
 
   def roll(): Unit =
-    undoManager.doStep(RollCommand(this, Dice().rollDice))
-    notifyObservers(Event.Roll)
+    val rollResult = Dice().rollDice
+    undoManager.doStep(RollCommand(this, rollResult))
+    notifyObservers(Event.Roll(rollResult))
 
   def undo(): Unit =
     undoManager.undoStep()
