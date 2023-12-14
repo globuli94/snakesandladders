@@ -6,6 +6,15 @@ import snakes.util.Dice
 
 import scala.collection.immutable.Queue
 
+trait IGameState {
+  def getBoard(): IBoard
+  def getPlayers(): List[IPlayer]
+  def getCurrentPlayer(): IPlayer
+  def isGameStarted(): Boolean
+  def startGame(): IGameState
+  def movePlayer(player: IPlayer, roll: Int): IGameState
+}
+
 case class aGame(board:Board = Board.createBoard(100), queue: Queue[Player] = Queue.empty, gameStarted: Boolean = false) {
 
   def startGame: aGame = copy(gameStarted = true)

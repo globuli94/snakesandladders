@@ -2,13 +2,25 @@ package snakes.model
 
 import scala.util.Random
 
-case class Board(size: Int, snakes: Map[Int, Int], ladders: Map[Int, Int])
-
-//Strategy:
-trait FeatureGenerationStrategy {
+trait IBoard {
+  def getSize: Int
+  def getSnakes: Map[Int, Int]
+  def getLadders: Map[Int, Int]
+}
+trait IBoardFactory {
+  def createBoard(size: Int, snakeStrategy: IFeatureGenerationStrategy, ladderStrategy: IFeatureGenerationStrategy): IBoard
+}
+trait IFeatureGenerationStrategy {
   def createFeatures(size: Int): Map[Int, Int]
 }
-class DefaultSnakeCreationStrategy extends FeatureGenerationStrategy {
+
+case class Board(size: Int, snakes: Map[Int, Int], ladders: Map[Int, Int]) extends IBoard {
+  override def getSize: Int = size
+  override def getSnakes: Map[Int, Int] = snakes
+  override def getLadders: Map[Int, Int] = ladders
+}
+
+class DefaultSnakeCreationStrategy extends IFeatureGenerationStrategy {
   private val random = new Random(0)
 
   override def createFeatures(size: Int): Map[Int, Int] = {
@@ -27,7 +39,7 @@ class DefaultSnakeCreationStrategy extends FeatureGenerationStrategy {
     features
   }
 }
-class DefaultLadderCreationStrategy extends FeatureGenerationStrategy {
+class DefaultLadderCreationStrategy extends IFeatureGenerationStrategy {
   private val random = new Random(0)
 
   override def createFeatures(size: Int): Map[Int, Int] = {
@@ -48,10 +60,10 @@ class DefaultLadderCreationStrategy extends FeatureGenerationStrategy {
 }
 
 trait BoardFactory {
-  def createBoard(size: Int, snakeStrategy: FeatureGenerationStrategy, ladderStrategy: FeatureGenerationStrategy): Board
+  def createBoard(size: Int, snakeStrategy: IFeatureGenerationStrategy, ladderStrategy: IFeatureGenerationStrategy): Board
 }
 class ConfigurableBoardFactory extends BoardFactory {
-  override def createBoard(size: Int, snakeStrategy: FeatureGenerationStrategy, ladderStrategy: FeatureGenerationStrategy): Board = {
+  override def createBoard(size: Int, snakeStrategy: IFeatureGenerationStrategy, ladderStrategy: IFeatureGenerationStrategy): Board = {
     val snakes = snakeStrategy.createFeatures(size)
     val ladders = ladderStrategy.createFeatures(size)
     Board(size, snakes, ladders)
