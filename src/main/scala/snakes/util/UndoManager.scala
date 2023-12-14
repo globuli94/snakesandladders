@@ -1,24 +1,29 @@
 package snakes.util
 
-class UndoManager {
-  private var undoStack: List[Command]= Nil
-  private var redoStack: List[Command]= Nil
+import snakes.controller.ICommand
 
-  def doStep(command: Command): Unit = {
-    undoStack = command::undoStack
+trait IUndoManager {
+  def doStep(command: ICommand): Unit
+  def undoStep(): Option[ICommand]
+}
+class UndoManager extends IUndoManager {
+  private var undoStack: List[ICommand] = Nil
+  private var redoStack: List[ICommand] = Nil
+
+  override def doStep(command: ICommand): Unit = {
+    undoStack = command :: undoStack
     command.doStep()
     redoStack = Nil
   }
 
-  def undoStep(): Option[Command] = {
+  override def undoStep(): Option[ICommand] = {
     undoStack match {
       case Nil => None
-      case head::stack => {
+      case head :: stack =>
         head.undoStep()
         undoStack = stack
         redoStack = head :: redoStack
         Some(head)
-      }
     }
   }
 }

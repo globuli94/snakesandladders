@@ -3,7 +3,7 @@ package snakes.controller
 import snakes.model.aGame
 import snakes.util.*
 
-class RollCommand(controller: Controller, number: Int) extends Command {
+class RollCommand(controller: Controller, number: Int) extends ICommand {
   private val gameState = controller.game
 
   override def doStep(): Unit =

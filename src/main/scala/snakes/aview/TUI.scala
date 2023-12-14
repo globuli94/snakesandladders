@@ -2,11 +2,24 @@ package snakes
 package aview
 
 import util.{Event, Observer}
-import controller.Controller
+import controller.{Controller, IGameController}
+import snakes.model.{IBoard, IPlayer}
 
 import scala.util.{Failure, Success, Try}
 
-class TUI(controller:Controller) extends Observer {
+trait IGameView {
+  def updateBoard(board: IBoard): Unit
+  def displayPlayerInfo(players: List[IPlayer]): Unit
+  def showGameStatus(message: String): Unit
+  def promptForUserInput(): Unit
+}
+
+
+trait IUserInputHandler {
+  def handleInput(input: String): Unit
+}
+
+class TUI(controller:IGameController) extends Observer {
   controller.add(this)
 
   def getInputAndPrintLoop(input:String): Unit =
@@ -15,23 +28,23 @@ class TUI(controller:Controller) extends Observer {
 
     splitInput(0) match
       case "create" => Try(splitInput(1).toInt) match
-        case Success(value) => controller.create(value)
+        case Success(value) => controller.createGame(value)
         case Failure(_) => new IllegalArgumentException("Invalid command")
       case "add" =>
         controller.addPlayer(splitInput(1))
       case "start" =>
-        controller.start
+        controller.startGame()
       case "roll" => 
-        controller.roll()
+        controller.rollDice()
       case "undo" =>
-        controller.undo()
+        controller.undoLastAction()
       /*
       case "redo" =>
         controller.redo
 
        */
       case "exit" =>
-        controller.exit()
+        controller.exitGame
       case _
       => println("not a valid command!")
 

@@ -1,7 +1,7 @@
 package snakes.aview
 
 import org.scalactic.source.Position
-import snakes.controller.Controller
+import snakes.controller.{Controller, IGameController}
 import snakes.util.{Event, Observer}
 
 import scala.math.sqrt
@@ -12,7 +12,7 @@ import scala.swing.Swing.EmptyBorder
 import scala.swing.event.*
 
 // main frame
-class GUI(controller: Controller) extends Frame with Observer {
+class GUI(controller: IGameController) extends Frame with Observer {
   controller.add(this)
   // menubar with AddPlayer and Exit
   title = "Snakes and Ladders"
@@ -34,7 +34,7 @@ class GUI(controller: Controller) extends Frame with Observer {
         }
       })
       contents += new MenuItem(Action("Exit") {
-        controller.exit()
+        controller.exitGame
       })
     }
   }
@@ -45,25 +45,25 @@ class GUI(controller: Controller) extends Frame with Observer {
   }
   lazy val fourButton = new BorderPanel {
     add(new Button(Action("4x4") {
-      controller.create(4)
+      controller.createGame(4)
     }), BorderPanel.Position.Center)
     preferredSize = new Dimension(175, 50)
   }
   lazy val sixButton = new BorderPanel {
     add(new Button(Action("6x6") {
-      controller.create(6)
+      controller.createGame(6)
     }), BorderPanel.Position.Center)
     preferredSize = new Dimension(175, 50)
   }
   lazy val eightButton = new BorderPanel {
     add(new Button(Action("8x8") {
-      controller.create(8)
+      controller.createGame(8)
     }), BorderPanel.Position.Center)
     preferredSize = new Dimension(175, 50)
   }
   lazy val tenButton = new BorderPanel {
     add(new Button(Action("10x10") {
-      controller.create(10)
+      controller.createGame(10)
     }), BorderPanel.Position.Center)
     preferredSize = new Dimension(175, 50)
   }
@@ -80,25 +80,25 @@ class GUI(controller: Controller) extends Frame with Observer {
       tenButton.visible = false
 
 
-      controller.start
+      controller.startGame()
     }
     visible = true
   }
   lazy val undoButton: Button = new Button {
     action = Action("Undo") {
-      controller.undo()
+      controller.undoLastAction()
     }
     visible = false
   }
 
   lazy val rollButton: Button = new Button {
     action = Action("Roll") {
-      if (controller.game.queue.isEmpty) {
+      if (controller.getCurrentGameState.queue.isEmpty) {
         Dialog.showMessage(null, "Add Players first!", "Error", Dialog.Message.Plain, Swing.EmptyIcon)
-      } else if (controller.game.queue.last.position == controller.game.board.size) {
-        Dialog.showMessage(null, controller.game.queue.last.name + " has won the game!", "Winner", Dialog.Message.Plain, Swing.EmptyIcon)
+      } else if (controller.getCurrentGameState.queue.last.position == controller.getCurrentGameState.board.size) {
+        Dialog.showMessage(null, controller.getCurrentGameState.queue.last.name + " has won the game!", "Winner", Dialog.Message.Plain, Swing.EmptyIcon)
       } else {
-        controller.roll()
+        controller.rollDice()
       }
     }
     visible = false
@@ -127,7 +127,7 @@ class GUI(controller: Controller) extends Frame with Observer {
   }
 
   // Player Panel
-  private class PlayerPanel(controller: Controller) extends BorderPanel {
+  private class PlayerPanel(controller: IGameController) extends BorderPanel {
     // Create a label for displaying text
     private val playerInfoText = new BoxPanel(Orientation.Vertical) {
       contents += new Label(" Players") {
@@ -142,7 +142,7 @@ class GUI(controller: Controller) extends Frame with Observer {
 
     private val playersContainer = new BoxPanel(Orientation.Vertical)
     // Add other components if needed, e.g., buttons, images, etc.
-    controller.game.queue.foreach { element =>
+    controller.getCurrentGameState.queue.foreach { element =>
       println(element)
       val playerLayout = new FlowPanel {
         contents += new Button(element.name + ":" + element.position) {
@@ -157,7 +157,7 @@ class GUI(controller: Controller) extends Frame with Observer {
   }
 
   // Panel for creating the Game Size
-  class SizeOptionPanel(controller: Controller) extends BoxPanel(Orientation.Vertical) {
+  class SizeOptionPanel(controller: IGameController) extends BoxPanel(Orientation.Vertical) {
     contents += boardSizeLabel
     contents += new BoxPanel(Orientation.Horizontal) {
       contents += fourButton
@@ -170,8 +170,8 @@ class GUI(controller: Controller) extends Frame with Observer {
     }
   }
 
-  private class FieldGridPanel(controller: Controller) extends GridPanel(sqrt(controller.game.board.size).toInt, sqrt(controller.game.board.size).toInt) {
-    val boardSize = sqrt(controller.game.board.size).toInt
+  private class FieldGridPanel(controller: IGameController) extends GridPanel(sqrt(controller.getCurrentGameState.board.size).toInt, sqrt(controller.getCurrentGameState.board.size).toInt) {
+    val boardSize = sqrt(controller.getCurrentGameState.board.size).toInt
 
     //zigzag, starting from bottom
     for (row <- 0 until boardSize) {
@@ -195,14 +195,14 @@ class GUI(controller: Controller) extends Frame with Observer {
 
 
   // creating a single field (field number, players on the field, and)
-  private class FieldPanel(controller: Controller, field: Int) extends BorderPanel {
+  private class FieldPanel(controller: IGameController, field: Int) extends BorderPanel {
     // field number and adds it to the bottom of the field
     private val label = new Label(field.toString)
     layout(label) = BorderPanel.Position.South
 
     // loops through player queue and adds a dot if player position == field position
     val playerDots = new BoxPanel(Orientation.Horizontal) {
-      controller.game.queue.foreach { element =>
+      controller.getCurrentGameState.queue.foreach { element =>
         if (element.position == field) {
           contents += new DotPanel(element.color)
         }
@@ -225,9 +225,9 @@ class GUI(controller: Controller) extends Frame with Observer {
       preferredSize = new Dimension(25,25)
     }
     // adds image icons to bottom of field by checking if field contains a snake or ladder
-    if (controller.game.board.snakes.contains(field)) {
+    if (controller.getCurrentGameState.board.snakes.contains(field)) {
       layout(snakeLabel) = BorderPanel.Position.North
-    } else if (controller.game.board.ladders.contains(field)) {
+    } else if (controller.getCurrentGameState.board.ladders.contains(field)) {
       layout(ladderLabel) = BorderPanel.Position.North
     } else {
       layout(emptyLabel) = BorderPanel.Position.North
@@ -258,7 +258,7 @@ class GUI(controller: Controller) extends Frame with Observer {
     }
   }
 
-  private class ControlPanel(controller: Controller) extends BoxPanel(Orientation.Vertical) {
+  private class ControlPanel(controller: IGameController) extends BoxPanel(Orientation.Vertical) {
     contents += new BorderPanel {
       layout(startButton) = BorderPanel.Position.Center
       preferredSize = new Dimension(400, 50)

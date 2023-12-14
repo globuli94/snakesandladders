@@ -6,16 +6,27 @@ import snakes.util.Dice
 
 import scala.collection.immutable.Queue
 
-trait IGameState {
+trait IGameState[T <: IGameState[T]] {
   def getBoard(): IBoard
   def getPlayers(): List[IPlayer]
   def getCurrentPlayer(): IPlayer
   def isGameStarted(): Boolean
-  def startGame(): IGameState
-  def movePlayer(player: IPlayer, roll: Int): IGameState
+  def startGame: T
+  def moveNextPlayer( roll: Int): T
 }
 
-case class aGame(board:Board = Board.createBoard(100), queue: Queue[Player] = Queue.empty, gameStarted: Boolean = false) {
+case class aGame(board: Board = Board.createBoard(100),
+                 queue: Queue[Player] = Queue.empty,
+                 gameStarted: Boolean = false)
+  extends IGameState[aGame] {
+  
+  override def getBoard(): IBoard = board
+  
+  override def getPlayers(): List[IPlayer] = getPlayers().toList
+  
+  override def getCurrentPlayer(): IPlayer = getPlayers().head
+  
+  override def isGameStarted(): Boolean = gameStarted
 
   def startGame: aGame = copy(gameStarted = true)
 
@@ -40,7 +51,7 @@ case class aGame(board:Board = Board.createBoard(100), queue: Queue[Player] = Qu
     newPosition = board.ladders.getOrElse(newPosition, newPosition)
     newPosition = newPosition min board.size
 
-    val updatedPlayer = player.moveTo(newPosition, roll)
+    val updatedPlayer = player.moveTo(newPosition, roll).asInstanceOf[Player]
     val newQueue = updatedQueue.enqueue(updatedPlayer)
 
     aGame(board, newQueue, gameStarted)
