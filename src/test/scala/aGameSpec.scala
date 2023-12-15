@@ -31,6 +31,26 @@ class aGameSpec extends AnyWordSpec {
         game.toString should be("Peter has won the game!!!")
       }
     }
+    "when calling getCurrentPlayer()" should {
+      val game = aGame()
+      val test = game.createPlayer("Peter")
+      "return the player Peter" in {
+        test.getCurrentPlayer().getName should be("Peter")
+      }
+    }
+    "when calling isGameStarted()" should {
+      val test = aGame()
+      "return false" in {
+        test.isGameStarted() should be (false)
+      }
+    }
+    "when calling startGame" should {
+      val game = aGame()
+      val test = game.startGame
+      "return a game where isGameStarted is true" in {
+        test.isGameStarted() should be(true)
+      }
+    }
     "when called on a game with players" should {
       val game = aGame()
       val playerPeter = Player.builder().setName("Peter").setPosition(3).build()

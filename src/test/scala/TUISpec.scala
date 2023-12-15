@@ -21,6 +21,12 @@ class TUISpec extends AnyWordSpec with Matchers {
         controller.getCurrentGameState.getPlayers.last.getName should be("Peter")
       }
     }
+    "start" should {
+      tui.handleInput("start")
+      "set the gameStarted boolean to true" in {
+        controller.getCurrentGameState.isGameStarted() should be(true)
+      }
+    }
     "roll" should {
       tui.handleInput("roll")
       "return a game with the updated position of the next player" in {

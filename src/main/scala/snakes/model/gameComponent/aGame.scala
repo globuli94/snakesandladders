@@ -10,14 +10,14 @@ import scala.collection.immutable.Queue
 
 
 case class aGame(board: Board = Board.createBoard(100),
-                 queue: Queue[Player] = Queue.empty,
+                 queue: Queue[IPlayer] = Queue.empty,
                  gameStarted: Boolean = false)
   extends IGameState {
 
   override def getBoard: IBoard = board
 
-  override def getPlayers: List[IPlayer] = {
-    queue.toList.map(player => player: IPlayer)
+  override def getPlayers: Queue[IPlayer] = {
+    queue
   }
 
   override def getCurrentPlayer(): IPlayer = getPlayers.head
@@ -41,13 +41,13 @@ case class aGame(board: Board = Board.createBoard(100),
 
   def moveNextPlayer(roll: Int): aGame = {
     val (player, updatedQueue) = queue.dequeue
-    var newPosition = player.position + roll
+    var newPosition = player.getPosition + roll
 
     newPosition = board.snakes.getOrElse(newPosition, newPosition)
     newPosition = board.ladders.getOrElse(newPosition, newPosition)
     newPosition = newPosition min board.size
 
-    val updatedPlayer = player.moveTo(newPosition, roll).asInstanceOf[Player]
+    val updatedPlayer = player.moveTo(newPosition, roll)
     val newQueue = updatedQueue.enqueue(updatedPlayer)
 
     aGame(board, newQueue, gameStarted)
@@ -60,19 +60,19 @@ case class aGame(board: Board = Board.createBoard(100),
         "\nPlease add Players using add(PLAYER NAME) or create a new game using create(SIZE)!" +
           "\nStart the game rolling the Dice using <roll>"
 
-    } else if(queue.last.position == 1 && !gameStarted) {
-      queue.last.name + " has been added to the Game!"
-    } else if(board.size == queue.last.position) {
-      queue.last.name + " has won the game!!!"
+    } else if(queue.last.getPosition == 1 && !gameStarted) {
+      queue.last.getName + " has been added to the Game!"
+    } else if(board.size == queue.last.getPosition) {
+      queue.last.getName + " has won the game!!!"
     } else {
-      val stringBuilder = new StringBuilder("---------------------------\n" + queue.last.name + " rolled a " + queue.last.lastRoll)
+      val stringBuilder = new StringBuilder("---------------------------\n" + queue.last.getName + " rolled a " + queue.last.getLastRoll)
       stringBuilder.append("\nPlayers: ")
       queue.foreach(element =>
-        stringBuilder.append(element.name + "[")
-        stringBuilder.append(element.position + "] ")
+        stringBuilder.append(element.getName + "[")
+        stringBuilder.append(element.getPosition + "] ")
       )
-      stringBuilder.append("\n" + queue.last.name + " moved to position " + queue.last.position + "!")
-      stringBuilder.append("\nNext Player up is: " + queue.head.name + "\n---------------------------")
+      stringBuilder.append("\n" + queue.last.getName + " moved to position " + queue.last.getPosition + "!")
+      stringBuilder.append("\nNext Player up is: " + queue.head.getName + "\n---------------------------")
       stringBuilder.toString()
     }
 }

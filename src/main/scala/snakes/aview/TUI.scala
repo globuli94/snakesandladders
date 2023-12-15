@@ -3,24 +3,15 @@ package aview
 
 import util.{Event, Observer}
 import snakes.controller.controllerComponent.{Controller, IGameController}
-import snakes.model.boardComponent.IBoard
-import snakes.model.playerComponent.IPlayer
 
 import scala.util.{Failure, Success, Try}
-
-trait IGameView {
-  def updateBoard(board: IBoard): Unit
-  def displayPlayerInfo(players: List[IPlayer]): Unit
-  def showGameStatus(message: String): Unit
-  def promptForUserInput(): Unit
-}
 
 
 trait IUserInputHandler {
   def handleInput(input: String): Unit
 }
 
-class TUI(controller: IGameController) extends IUserInputHandler with IGameView with Observer {
+class TUI(controller: IGameController) extends IUserInputHandler with Observer {
   controller.add(this)
 
   override def handleInput(input: String): Unit = {
@@ -31,7 +22,7 @@ class TUI(controller: IGameController) extends IUserInputHandler with IGameView 
         case Failure(_) => println("Invalid command for create.")
       }
       case "add" =>
-        controller.addPlayer(splitInput.lift(1).getOrElse(""))
+        controller.addPlayer(splitInput(1))
       case "start" =>
         controller.startGame()
       case "roll" =>
@@ -43,27 +34,6 @@ class TUI(controller: IGameController) extends IUserInputHandler with IGameView 
       case _ =>
         println("Not a valid command!")
     }
-  }
-
-  override def updateBoard(board: IBoard): Unit = {
-    println("Board Updated:")
-  }
-
-  override def displayPlayerInfo(players: List[IPlayer]): Unit = {
-    println("Players Information:")
-    players.foreach { player =>
-      println(s"${player.getName} at position ${player.getPosition}")
-    }
-  }
-
-  override def showGameStatus(message: String): Unit = {
-    println(s"Game Status: $message")
-  }
-
-  override def promptForUserInput(): Unit = {
-    println("Enter your command:")
-    val input = scala.io.StdIn.readLine()
-    handleInput(input)
   }
 
   override def update(e: Event): Unit = {
