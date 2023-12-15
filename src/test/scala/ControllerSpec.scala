@@ -15,19 +15,19 @@ class ControllerSpec extends AnyWordSpec with Matchers {
     val peter = Player.builder().setName("Peter").setPosition(0).build()
     "undo is called on a game when a dice hase been rolled twice" should {
       val gameWithPlayer = controller.addPlayer("Peter")
-      controller.roll()
-      val test1 = controller.game
-      controller.roll()
-      val test2 = controller.game
-      controller.undo()
+      controller.rollDice()
+      val test1 = controller.getCurrentGameState
+      controller.rollDice()
+      val test2 = controller.getCurrentGameState
+      controller.undoLastAction()
       "return controller.game = test1" in {
-        controller.game = test1
+        controller.getCurrentGameState == test1
       }
     }
     "toString" should {
       val test = controller.toString
       "return the toString from the model aGame" in {
-        test should be(controller.game.toString)
+        test should be(controller.getCurrentGameState.toString)
       }
     }
   }

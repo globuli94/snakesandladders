@@ -1,15 +1,12 @@
 package snakes.aview
 
-import org.scalactic.source.Position
-import snakes.controller.controllerComponent.{Controller, IGameController}
+import snakes.controller.controllerComponent.IGameController
 import snakes.util.{Event, Observer}
 
 import scala.math.sqrt
 import java.awt.Color
-import javax.swing.{BorderFactory, BoxLayout, ImageIcon}
+import javax.swing.{BorderFactory, ImageIcon}
 import scala.swing.*
-import scala.swing.Swing.EmptyBorder
-import scala.swing.event.*
 
 // main frame
 class GUI(controller: IGameController) extends Frame with Observer {

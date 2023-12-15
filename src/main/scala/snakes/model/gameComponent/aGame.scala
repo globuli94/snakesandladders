@@ -62,10 +62,10 @@ case class aGame(board: Board = Board.createBoard(100),
 
     } else if(queue.last.position == 1 && !gameStarted) {
       queue.last.name + " has been added to the Game!"
-    } else if(board.size == queue.last.position && gameStarted) {
+    } else if(board.size == queue.last.position) {
       queue.last.name + " has won the game!!!"
     } else {
-      val stringBuilder = new StringBuilder("---------------------------\n" + queue.last.name + "  rolled a " + queue.last.lastRoll)
+      val stringBuilder = new StringBuilder("---------------------------\n" + queue.last.name + " rolled a " + queue.last.lastRoll)
       stringBuilder.append("\nPlayers: ")
       queue.foreach(element =>
         stringBuilder.append(element.name + "[")

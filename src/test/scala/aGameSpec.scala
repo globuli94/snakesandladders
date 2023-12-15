@@ -18,19 +18,6 @@ class aGameSpec extends AnyWordSpec {
         test.queue should be(Queue.empty)
       }
     }
-    "when calling moveNextPlayer(11) on a game size 2 with Peter at position 0" should {
-      val game = aGame(Board.createBoard(2))
-      val gameWithPlayer = game.createPlayer("Peter")
-
-      val test = gameWithPlayer.moveNextPlayer(11)
-      val test2 = gameWithPlayer.queue.dequeue
-    }
-    "when calling moveNextPlayer() on a game size 5 and a ladder on field 1" should {
-      val game = aGame().createGame(5)
-      val gameWithPlayer = game.createPlayer("Peter")
-
-      val test = gameWithPlayer.moveNextPlayer(1)
-    }
     "when a player was recently added" should {
       val game = aGame()
       val test = game.createPlayer("Peter")
@@ -52,8 +39,12 @@ class aGameSpec extends AnyWordSpec {
       val testQueue = queue.enqueue(playerMarko)
 
       val test = aGame(game.board, testQueue)
-      "return a String -> ---------------------------nPlayers: " in {
-        test.toString should be("---------------------------\nPlayers: Peter[3] Marko[5] "
+      println(test.toString)
+
+      "return a String -> ---------------------------Players: " in {
+        test.toString should be(
+          "---------------------------\n"
+            +"Marko rolled a 0\nPlayers: Peter[3] Marko[5] "
           + "\nMarko moved to position 5!"
           + "\nNext Player up is: Peter"
           + "\n---------------------------")
