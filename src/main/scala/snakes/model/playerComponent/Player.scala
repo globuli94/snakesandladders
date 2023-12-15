@@ -1,4 +1,4 @@
-package snakes.model
+package snakes.model.playerComponent
 
 import java.awt.Color
 import scala.swing.Color

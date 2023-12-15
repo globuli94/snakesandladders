@@ -1,6 +1,6 @@
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
-import snakes.model.{Board, DefaultLadderCreationStrategy, DefaultSnakeCreationStrategy}
+import snakes.model.boardComponent.{Board, DefaultLadderCreationStrategy, DefaultSnakeCreationStrategy}
 
 class BoardSpec extends AnyWordSpec with Matchers {
 

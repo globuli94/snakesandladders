@@ -2,8 +2,9 @@ package snakes
 package aview
 
 import util.{Event, Observer}
-import controller.{Controller, IGameController}
-import snakes.model.{IBoard, IPlayer}
+import snakes.controller.controllerComponent.{Controller, IGameController}
+import snakes.model.boardComponent.IBoard
+import snakes.model.playerComponent.IPlayer
 
 import scala.util.{Failure, Success, Try}
 

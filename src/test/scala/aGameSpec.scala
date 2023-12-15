@@ -2,6 +2,9 @@ package snakes.model
 
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
+import snakes.model.boardComponent.Board
+import snakes.model.gameComponent.aGame
+import snakes.model.playerComponent.Player
 
 import scala.collection.immutable.Queue
 

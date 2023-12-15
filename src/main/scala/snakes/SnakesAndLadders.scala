@@ -1,8 +1,8 @@
 package snakes
 
 import aview.{GUI, TUI}
-import controller.Controller
-import model.aGame
+import snakes.controller.controllerComponent.Controller
+import snakes.model.gameComponent.aGame
 import snakes.util.Event
 
 import scala.io.StdIn.readLine

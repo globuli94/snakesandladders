@@ -1,6 +1,7 @@
-package snakes.controller
+package snakes.controller.controllerComponent
 
-import snakes.model.{IGameState, aGame}
+import snakes.controller.controllerComponent.{ICommand, IGameController}
+import snakes.model.gameComponent.{IGameState, aGame}
 import snakes.util.*
 
 class RollCommand(controller: IGameController, private val rollResult: Int) extends ICommand {

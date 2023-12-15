@@ -1,23 +1,11 @@
-package snakes
-package controller
+package snakes.controller.controllerComponent
 
-import snakes.model.{IGameState, aGame}
+import snakes.controller.controllerComponent.IGameController
+import snakes.model.gameComponent.{IGameState, aGame}
 import snakes.util.{Dice, Event, Observable, UndoManager}
 
-trait IGameController extends Observable {
-  def startGame(): Unit
-  def createGame(size: Int): Unit
-  def addPlayer(name: String): Unit
-  def rollDice(): Unit
-  def undoLastAction(): Unit
-  def getCurrentGameState: IGameState
-  def exitGame(): Unit
-  def setGameState(state: IGameState): Unit
-}
-trait ICommand {
-  def doStep(): Unit
-  def undoStep(): Unit
-}
+
+
 
 case class Controller(private var gameState: IGameState) extends IGameController with Observable {
   val undoManager = new UndoManager

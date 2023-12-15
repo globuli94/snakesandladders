@@ -1,21 +1,13 @@
-package snakes.model
+package snakes.model.gameComponent
 
-import snakes.model.Board
-import snakes.model.Player
+import snakes.model.*
+import snakes.model.boardComponent.{Board, IBoard}
+import snakes.model.playerComponent.{IPlayer, Player}
 import snakes.util.Dice
 
 import scala.collection.immutable.Queue
 
-trait IGameState {
-  def getBoard: IBoard
-  def getPlayers: List[IPlayer]
-  def getCurrentPlayer(): IPlayer
-  def isGameStarted(): Boolean
-  def startGame: IGameState
-  def moveNextPlayer( roll: Int): IGameState
-  def createGame(size: Int): IGameState
-  def createPlayer(name: String): IGameState
-}
+
 
 case class aGame(board: Board = Board.createBoard(100),
                  queue: Queue[Player] = Queue.empty,

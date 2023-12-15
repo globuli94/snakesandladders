@@ -2,10 +2,12 @@ package snakes.aview
 
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
-
 import snakes.model.*
 import snakes.aview.*
 import snakes.controller.*
+import snakes.controller.controllerComponent.Controller
+import snakes.model.boardComponent.Board
+import snakes.model.gameComponent.aGame
 class TUISpec extends AnyWordSpec with Matchers {
   "A TUI" when {
     val game: aGame = aGame(Board.createBoard(5))

@@ -1,7 +1,7 @@
 package snakes.aview
 
 import org.scalactic.source.Position
-import snakes.controller.{Controller, IGameController}
+import snakes.controller.controllerComponent.{Controller, IGameController}
 import snakes.util.{Event, Observer}
 
 import scala.math.sqrt

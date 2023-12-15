@@ -1,6 +1,6 @@
 package snakes.util
 
-import snakes.controller.ICommand
+import snakes.controller.controllerComponent.ICommand
 
 trait IUndoManager {
   def doStep(command: ICommand): Unit
