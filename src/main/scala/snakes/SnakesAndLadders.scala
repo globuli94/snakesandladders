@@ -20,7 +20,7 @@ object SnakesAndLadders {
 
     while(input != "exit") {
       input = readLine()
-      tui.getInputAndPrintLoop(input)
+      tui.handleInput(input)
     }
   }
 }
