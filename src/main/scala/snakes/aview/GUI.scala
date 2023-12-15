@@ -34,7 +34,7 @@ class GUI(controller: IGameController) extends Frame with Observer {
         }
       })
       contents += new MenuItem(Action("Exit") {
-        controller.exitGame
+        controller.exitGame()
       })
     }
   }
@@ -93,10 +93,10 @@ class GUI(controller: IGameController) extends Frame with Observer {
 
   lazy val rollButton: Button = new Button {
     action = Action("Roll") {
-      if (controller.getCurrentGameState.queue.isEmpty) {
+      if (controller.getCurrentGameState.getPlayers.isEmpty) {
         Dialog.showMessage(null, "Add Players first!", "Error", Dialog.Message.Plain, Swing.EmptyIcon)
-      } else if (controller.getCurrentGameState.queue.last.position == controller.getCurrentGameState.board.size) {
-        Dialog.showMessage(null, controller.getCurrentGameState.queue.last.name + " has won the game!", "Winner", Dialog.Message.Plain, Swing.EmptyIcon)
+      } else if (controller.getCurrentGameState.getPlayers.last.getPosition == controller.getCurrentGameState.getBoard.getSize) {
+        Dialog.showMessage(null, controller.getCurrentGameState.getPlayers.last.getName + " has won the game!", "Winner", Dialog.Message.Plain, Swing.EmptyIcon)
       } else {
         controller.rollDice()
       }
@@ -142,13 +142,13 @@ class GUI(controller: IGameController) extends Frame with Observer {
 
     private val playersContainer = new BoxPanel(Orientation.Vertical)
     // Add other components if needed, e.g., buttons, images, etc.
-    controller.getCurrentGameState.queue.foreach { element =>
+    controller.getCurrentGameState.getPlayers.foreach { element =>
       println(element)
       val playerLayout = new FlowPanel {
-        contents += new Button(element.name + ":" + element.position) {
+        contents += new Button(element.getName + ":" + element.getPosition) {
           preferredSize = new Dimension(100,75)
         }
-        contents += new DotPanel(element.color)
+        contents += new DotPanel(element.getColor)
       }
       playersContainer.contents += playerLayout
     }
@@ -170,8 +170,8 @@ class GUI(controller: IGameController) extends Frame with Observer {
     }
   }
 
-  private class FieldGridPanel(controller: IGameController) extends GridPanel(sqrt(controller.getCurrentGameState.board.size).toInt, sqrt(controller.getCurrentGameState.board.size).toInt) {
-    val boardSize = sqrt(controller.getCurrentGameState.board.size).toInt
+  private class FieldGridPanel(controller: IGameController) extends GridPanel(sqrt(controller.getCurrentGameState.getBoard.getSize).toInt, sqrt(controller.getCurrentGameState.getBoard.getSize).toInt) {
+    val boardSize = sqrt(controller.getCurrentGameState.getBoard.getSize).toInt
 
     //zigzag, starting from bottom
     for (row <- 0 until boardSize) {
@@ -202,9 +202,9 @@ class GUI(controller: IGameController) extends Frame with Observer {
 
     // loops through player queue and adds a dot if player position == field position
     val playerDots = new BoxPanel(Orientation.Horizontal) {
-      controller.getCurrentGameState.queue.foreach { element =>
-        if (element.position == field) {
-          contents += new DotPanel(element.color)
+      controller.getCurrentGameState.getPlayers.foreach { element =>
+        if (element.getPosition == field) {
+          contents += new DotPanel(element.getColor)
         }
       }
     }
@@ -225,9 +225,9 @@ class GUI(controller: IGameController) extends Frame with Observer {
       preferredSize = new Dimension(25,25)
     }
     // adds image icons to bottom of field by checking if field contains a snake or ladder
-    if (controller.getCurrentGameState.board.snakes.contains(field)) {
+    if (controller.getCurrentGameState.getBoard.getSnakes.contains(field)) {
       layout(snakeLabel) = BorderPanel.Position.North
-    } else if (controller.getCurrentGameState.board.ladders.contains(field)) {
+    } else if (controller.getCurrentGameState.getBoard.getLadders.contains(field)) {
       layout(ladderLabel) = BorderPanel.Position.North
     } else {
       layout(emptyLabel) = BorderPanel.Position.North

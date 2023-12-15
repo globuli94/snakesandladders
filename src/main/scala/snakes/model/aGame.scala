@@ -6,26 +6,30 @@ import snakes.util.Dice
 
 import scala.collection.immutable.Queue
 
-trait IGameState[T <: IGameState[T]] {
-  def getBoard(): IBoard
-  def getPlayers(): List[IPlayer]
+trait IGameState {
+  def getBoard: IBoard
+  def getPlayers: List[IPlayer]
   def getCurrentPlayer(): IPlayer
   def isGameStarted(): Boolean
-  def startGame: T
-  def moveNextPlayer( roll: Int): T
+  def startGame: IGameState
+  def moveNextPlayer( roll: Int): IGameState
+  def createGame(size: Int): IGameState
+  def createPlayer(name: String): IGameState
 }
 
 case class aGame(board: Board = Board.createBoard(100),
                  queue: Queue[Player] = Queue.empty,
                  gameStarted: Boolean = false)
-  extends IGameState[aGame] {
-  
-  override def getBoard(): IBoard = board
-  
-  override def getPlayers(): List[IPlayer] = getPlayers().toList
-  
-  override def getCurrentPlayer(): IPlayer = getPlayers().head
-  
+  extends IGameState {
+
+  override def getBoard: IBoard = board
+
+  override def getPlayers: List[IPlayer] = {
+    queue.toList.map(player => player: IPlayer)
+  }
+
+  override def getCurrentPlayer(): IPlayer = getPlayers.head
+
   override def isGameStarted(): Boolean = gameStarted
 
   def startGame: aGame = copy(gameStarted = true)

@@ -44,7 +44,7 @@ class TUI(controller:IGameController) extends Observer {
 
        */
       case "exit" =>
-        controller.exitGame
+        controller.exitGame()
       case _
       => println("not a valid command!")
 

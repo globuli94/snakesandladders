@@ -1,14 +1,22 @@
 package snakes.controller
 
-import snakes.model.aGame
+import snakes.model.{IGameState, aGame}
 import snakes.util.*
 
-class RollCommand(controller: Controller, number: Int) extends ICommand {
-  private val gameState = controller.game
+class RollCommand(controller: IGameController, private val rollResult: Int) extends ICommand {
+  private var previousState: Option[IGameState] = None
 
-  override def doStep(): Unit =
-    controller.game = controller.game.moveNextPlayer(number)
+  override def doStep(): Unit = {
+    previousState = Some(controller.getCurrentGameState)
 
-  override def undoStep(): Unit =
-    controller.game = gameState
+    controller.setGameState(controller.getCurrentGameState.moveNextPlayer(rollResult))
+  }
+
+  override def undoStep(): Unit = {
+    previousState match {
+      case Some(state) =>
+        controller.setGameState(state)
+      case None =>
+    }
+  }
 }
