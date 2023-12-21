@@ -1,5 +1,5 @@
 package snakes.model.gameComponent
-
+import com.google.inject.Inject
 import snakes.model.*
 import snakes.model.boardComponent.{Board, IBoard}
 import snakes.model.playerComponent.{IPlayer, Player}
@@ -9,7 +9,7 @@ import scala.collection.immutable.Queue
 
 
 
-case class aGame(board: Board = Board.createBoard(100),
+case class aGame @Inject() (board: Board = Board.createBoard(100),
                  queue: Queue[IPlayer] = Queue.empty,
                  gameStarted: Boolean = false)
   extends IGameState {

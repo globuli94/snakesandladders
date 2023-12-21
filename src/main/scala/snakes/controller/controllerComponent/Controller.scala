@@ -1,5 +1,6 @@
 package snakes.controller.controllerComponent
 
+import com.google.inject.Inject
 import snakes.controller.controllerComponent.IGameController
 import snakes.model.gameComponent.{IGameState, aGame}
 import snakes.util.{Dice, Event, Observable, UndoManager}
@@ -7,8 +8,9 @@ import snakes.util.{Dice, Event, Observable, UndoManager}
 
 
 
-case class Controller(private var gameState: IGameState) extends IGameController with Observable {
+case class Controller @Inject() (private var gameState: IGameState) extends IGameController with Observable {
   val undoManager = new UndoManager
+
 
   override def setGameState(state: IGameState): Unit = {
     gameState = state
