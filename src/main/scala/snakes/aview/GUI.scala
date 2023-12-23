@@ -1,6 +1,6 @@
 package snakes.aview
 
-import snakes.controller.controllerComponent.IGameController
+import snakes.controller.controllerComponent.ControllerInterface
 import snakes.util.{Event, Observer}
 
 import scala.math.sqrt
@@ -9,7 +9,7 @@ import javax.swing.{BorderFactory, ImageIcon}
 import scala.swing.*
 
 // main frame
-class GUI(controller: IGameController) extends Frame with Observer {
+class GUI(controller: ControllerInterface) extends Frame with Observer {
   controller.add(this)
   // menubar with AddPlayer and Exit
   title = "Snakes and Ladders"
@@ -124,7 +124,7 @@ class GUI(controller: IGameController) extends Frame with Observer {
   }
 
   // Player Panel
-  private class PlayerPanel(controller: IGameController) extends BorderPanel {
+  private class PlayerPanel(controller: ControllerInterface) extends BorderPanel {
     // Create a label for displaying text
     private val playerInfoText = new BoxPanel(Orientation.Vertical) {
       contents += new Label(" Players") {
@@ -154,7 +154,7 @@ class GUI(controller: IGameController) extends Frame with Observer {
   }
 
   // Panel for creating the Game Size
-  class SizeOptionPanel(controller: IGameController) extends BoxPanel(Orientation.Vertical) {
+  class SizeOptionPanel(controller: ControllerInterface) extends BoxPanel(Orientation.Vertical) {
     contents += boardSizeLabel
     contents += new BoxPanel(Orientation.Horizontal) {
       contents += fourButton
@@ -167,7 +167,7 @@ class GUI(controller: IGameController) extends Frame with Observer {
     }
   }
 
-  private class FieldGridPanel(controller: IGameController) extends GridPanel(sqrt(controller.getCurrentGameState.getBoard.getSize).toInt, sqrt(controller.getCurrentGameState.getBoard.getSize).toInt) {
+  private class FieldGridPanel(controller: ControllerInterface) extends GridPanel(sqrt(controller.getCurrentGameState.getBoard.getSize).toInt, sqrt(controller.getCurrentGameState.getBoard.getSize).toInt) {
     val boardSize = sqrt(controller.getCurrentGameState.getBoard.getSize).toInt
 
     //zigzag, starting from bottom
@@ -192,7 +192,7 @@ class GUI(controller: IGameController) extends Frame with Observer {
 
 
   // creating a single field (field number, players on the field, and)
-  private class FieldPanel(controller: IGameController, field: Int) extends BorderPanel {
+  private class FieldPanel(controller: ControllerInterface, field: Int) extends BorderPanel {
     // field number and adds it to the bottom of the field
     private val label = new Label(field.toString)
     layout(label) = BorderPanel.Position.South
@@ -255,7 +255,7 @@ class GUI(controller: IGameController) extends Frame with Observer {
     }
   }
 
-  private class ControlPanel(controller: IGameController) extends BoxPanel(Orientation.Vertical) {
+  private class ControlPanel(controller: ControllerInterface) extends BoxPanel(Orientation.Vertical) {
     contents += new BorderPanel {
       layout(startButton) = BorderPanel.Position.Center
       preferredSize = new Dimension(400, 50)

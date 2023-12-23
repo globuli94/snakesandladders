@@ -2,15 +2,16 @@ package snakes
 
 import aview.{GUI, TUI}
 import com.google.inject.Guice
-import snakes.controller.controllerComponent.{Controller, IGameController}
-import snakes.model.gameComponent.aGame
+import snakes.controller.controllerComponent.{Controller, ControllerInterface}
+import snakes.model.gameComponent.Game
 import snakes.util.Event
 
 import scala.io.StdIn.readLine
 
 object SnakesAndLadders {
 
-  val controller = Guice.createInjector(new SnakesModule).getInstance(classOf[IGameController])
+  val injector = Guice.createInjector(new SnakesModule)
+  val controller = injector.getInstance(classOf[ControllerInterface])
   val tui = TUI(controller)
   val gui = new GUI(controller)
 

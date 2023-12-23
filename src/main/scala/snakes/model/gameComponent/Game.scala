@@ -1,45 +1,45 @@
 package snakes.model.gameComponent
 import com.google.inject.Inject
 import snakes.model.*
-import snakes.model.boardComponent.{Board, IBoard}
-import snakes.model.playerComponent.{IPlayer, Player}
+import snakes.model.boardComponent.{Board, BoardInterface}
+import snakes.model.playerComponent.{PlayerInterface, Player}
 import snakes.util.Dice
 
 import scala.collection.immutable.Queue
 
 
 
-case class aGame @Inject() (board: Board = Board.createBoard(100),
-                 queue: Queue[IPlayer] = Queue.empty,
-                 gameStarted: Boolean = false)
-  extends IGameState {
+case class Game @Inject()(board: Board = Board.createBoard(100),
+                          queue: Queue[PlayerInterface] = Queue.empty,
+                          gameStarted: Boolean = false)
+  extends GameInterface {
 
-  override def getBoard: IBoard = board
+  override def getBoard: BoardInterface = board
 
-  override def getPlayers: Queue[IPlayer] = {
+  override def getPlayers: Queue[PlayerInterface] = {
     queue
   }
 
-  override def getCurrentPlayer(): IPlayer = getPlayers.head
+  override def getCurrentPlayer(): PlayerInterface = getPlayers.head
 
   override def isGameStarted(): Boolean = gameStarted
 
-  def startGame: aGame = copy(gameStarted = true)
+  def startGame: Game = copy(gameStarted = true)
 
-  def createGame(size: Int): aGame = {
-    aGame(Board.createBoard(size*size))
+  def createGame(size: Int): Game = {
+    Game(Board.createBoard(size*size))
   }
 
-  def createPlayer(name: String): aGame = {
+  def createPlayer(name: String): Game = {
     val player = Player.builder()
       .setName(name)
       .setPosition(1)
       .setColor(queue.size)
       .build()
-    aGame(board, queue.enqueue(player))
+    Game(board, queue.enqueue(player))
   }
 
-  def moveNextPlayer(roll: Int): aGame = {
+  def moveNextPlayer(roll: Int): Game = {
     val (player, updatedQueue) = queue.dequeue
     var newPosition = player.getPosition + roll
 
@@ -50,7 +50,7 @@ case class aGame @Inject() (board: Board = Board.createBoard(100),
     val updatedPlayer = player.moveTo(newPosition, roll)
     val newQueue = updatedQueue.enqueue(updatedPlayer)
 
-    aGame(board, newQueue, gameStarted)
+    Game(board, newQueue, gameStarted)
   }
 
 

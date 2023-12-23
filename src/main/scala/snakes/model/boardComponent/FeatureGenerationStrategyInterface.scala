@@ -1,5 +1,5 @@
 package snakes.model.boardComponent
 
-trait IFeatureGenerationStrategy {
+trait FeatureGenerationStrategyInterface {
   def createFeatures(size: Int): Map[Int, Int]
 }

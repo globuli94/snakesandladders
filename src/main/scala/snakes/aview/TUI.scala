@@ -2,7 +2,7 @@ package snakes
 package aview
 
 import util.{Event, Observer}
-import snakes.controller.controllerComponent.{Controller, IGameController}
+import snakes.controller.controllerComponent.{Controller, ControllerInterface}
 
 import scala.util.{Failure, Success, Try}
 
@@ -11,7 +11,7 @@ trait IUserInputHandler {
   def handleInput(input: String): Unit
 }
 
-class TUI(controller: IGameController) extends IUserInputHandler with Observer {
+class TUI(controller: ControllerInterface) extends IUserInputHandler with Observer {
   controller.add(this)
 
   override def handleInput(input: String): Unit = {

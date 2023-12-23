@@ -1,11 +1,11 @@
 package snakes.controller.controllerComponent
 
-import snakes.controller.controllerComponent.{ICommand, IGameController}
-import snakes.model.gameComponent.{IGameState, aGame}
+import snakes.controller.controllerComponent.ControllerInterface
+import snakes.model.gameComponent.{GameInterface, Game}
 import snakes.util.*
 
-class RollCommand(controller: IGameController, private val rollResult: Int) extends ICommand {
-  private var previousState: Option[IGameState] = None
+class RollCommand(controller: ControllerInterface, private val rollResult: Int) extends CommandInterface {
+  private var previousState: Option[GameInterface] = None
 
   override def doStep(): Unit = {
     previousState = Some(controller.getCurrentGameState)

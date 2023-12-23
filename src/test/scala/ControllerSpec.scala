@@ -4,14 +4,14 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
 import snakes.controller.controllerComponent.Controller
 import snakes.model.*
-import snakes.model.gameComponent.aGame
+import snakes.model.gameComponent.Game
 import snakes.model.playerComponent.Player
 
 class ControllerSpec extends AnyWordSpec with Matchers {
 
   "Controller" when {
     "undo is called on a game when a dice hase been rolled twice" should {
-      val game = aGame()
+      val game = Game()
       val controller = Controller(game)
 
       val gameWithPlayer = controller.addPlayer("Peter")
@@ -25,7 +25,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
       }
     }
     "when calling startGame() on a base game" should {
-      val game = aGame()
+      val game = Game()
       val controller = Controller(game)
 
       val test = controller.startGame()
@@ -34,7 +34,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
       }
     }
     "undo is called on a game when no commands have been used" should {
-      val game = aGame()
+      val game = Game()
       val controller = Controller(game)
 
       controller.undoLastAction()
@@ -44,7 +44,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
       }
     }
     "toString" should {
-      val game = aGame()
+      val game = Game()
       val controller = Controller(game)
       val test = controller.toString
       "return the toString from the model aGame" in {

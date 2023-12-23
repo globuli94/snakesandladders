@@ -3,24 +3,17 @@ package snakes.model.playerComponent
 import java.awt.Color
 import scala.swing.Color
 
-trait IPlayer {
-  def getName: String
-  def getPosition: Int
-  def getColor: Color
-  def getLastRoll: Int
-  def moveTo(position: Int, lastRoll: Int): IPlayer
-}
-
-case class Player(name: String, position: Int, color: Color, lastRoll: Int = 0) extends IPlayer {
+case class Player(name: String, position: Int, color: Color, lastRoll: Int = 0) extends PlayerInterface {
   override def getName: String = name
   override def getPosition: Int = position
   override def getColor: Color = color
   override def getLastRoll: Int = lastRoll
 
-  override def moveTo(newPosition: Int, newLastRoll: Int): IPlayer = {
+  override def moveTo(newPosition: Int, newLastRoll: Int): PlayerInterface = {
     copy(position = newPosition, lastRoll = newLastRoll)
   }
 }
+
 object Player {
   class Builder(private var name: String = "", private var position: Int = 1, private var color: Color = new Color(128, 128, 128), private var lastRoll: Int = 0) {
     def setName(newName: String): Builder = {

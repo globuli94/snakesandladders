@@ -2,7 +2,7 @@ package snakes.model.boardComponent
 
 import scala.util.Random
 
-class DefaultLadderCreationStrategy extends IFeatureGenerationStrategy {
+class DefaultLadderCreationStrategy extends FeatureGenerationStrategyInterface {
   private val random = new Random(0)
 
   override def createFeatures(size: Int): Map[Int, Int] = {

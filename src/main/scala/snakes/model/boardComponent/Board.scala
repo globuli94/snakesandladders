@@ -4,7 +4,7 @@ import snakes.model.*
 
 import scala.util.Random
 
-case class Board(size: Int, snakes: Map[Int, Int], ladders: Map[Int, Int]) extends IBoard {
+case class Board(size: Int, snakes: Map[Int, Int], ladders: Map[Int, Int]) extends BoardInterface {
   override def getSize: Int = size
   override def getSnakes: Map[Int, Int] = snakes
   override def getLadders: Map[Int, Int] = ladders

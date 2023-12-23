@@ -7,12 +7,12 @@ import snakes.aview.*
 import snakes.controller.*
 import snakes.controller.controllerComponent.Controller
 import snakes.model.boardComponent.Board
-import snakes.model.gameComponent.aGame
+import snakes.model.gameComponent.Game
 
 
 class TUISpec extends AnyWordSpec with Matchers {
   "A TUI" when {
-    val game: aGame = aGame(Board.createBoard(5))
+    val game: Game = Game(Board.createBoard(5))
     val controller: Controller = Controller(game)
     val tui = TUI(controller)
     "adding a Player using add NAME" should {
@@ -51,7 +51,7 @@ class TUISpec extends AnyWordSpec with Matchers {
       }
     }
     "any other input" should {
-      val game: aGame = aGame(Board.createBoard(5))
+      val game: Game = Game(Board.createBoard(5))
       val controller: Controller = Controller(game)
       val tui = TUI(controller)
       tui.handleInput("bla")
