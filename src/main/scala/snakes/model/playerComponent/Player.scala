@@ -8,7 +8,6 @@ case class Player(name: String, position: Int, color: Color, lastRoll: Int = 0) 
   override def getPosition: Int = position
   override def getColor: Color = color
   override def getLastRoll: Int = lastRoll
-
   override def moveTo(newPosition: Int, newLastRoll: Int): PlayerInterface = {
     copy(position = newPosition, lastRoll = newLastRoll)
   }
@@ -33,7 +32,6 @@ object Player {
         3 -> Color.blue,
         4 -> Color.orange
       )
-
       color = colorMap(x)
       this
     }

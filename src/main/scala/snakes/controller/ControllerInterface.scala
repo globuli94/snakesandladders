@@ -1,4 +1,4 @@
-package snakes.controller.controllerComponent
+package snakes.controller
 
 import snakes.model.gameComponent.GameInterface
 import snakes.util.Observable

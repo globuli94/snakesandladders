@@ -1,6 +1,6 @@
 package snakes.aview
 
-import snakes.controller.controllerComponent.ControllerInterface
+import snakes.controller.ControllerInterface
 import snakes.util.{Event, Observer}
 
 import scala.math.sqrt
@@ -140,7 +140,6 @@ class GUI(controller: ControllerInterface) extends Frame with Observer {
     private val playersContainer = new BoxPanel(Orientation.Vertical)
     // Add other components if needed, e.g., buttons, images, etc.
     controller.getCurrentGameState.getPlayers.foreach { element =>
-      println(element)
       val playerLayout = new FlowPanel {
         contents += new Button(element.getName + ":" + element.getPosition) {
           preferredSize = new Dimension(100,75)
@@ -158,18 +157,14 @@ class GUI(controller: ControllerInterface) extends Frame with Observer {
     contents += boardSizeLabel
     contents += new BoxPanel(Orientation.Horizontal) {
       contents += fourButton
-
       contents += sixButton
-
       contents += eightButton
-
       contents += tenButton
     }
   }
 
   private class FieldGridPanel(controller: ControllerInterface) extends GridPanel(sqrt(controller.getCurrentGameState.getBoard.getSize).toInt, sqrt(controller.getCurrentGameState.getBoard.getSize).toInt) {
     val boardSize = sqrt(controller.getCurrentGameState.getBoard.getSize).toInt
-
     //zigzag, starting from bottom
     for (row <- 0 until boardSize) {
       val base = (boardSize - row - 1) * boardSize
@@ -188,8 +183,6 @@ class GUI(controller: ControllerInterface) extends Frame with Observer {
       }
     }
   }
-
-
 
   // creating a single field (field number, players on the field, and)
   private class FieldPanel(controller: ControllerInterface, field: Int) extends BorderPanel {

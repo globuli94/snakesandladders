@@ -2,7 +2,6 @@ package snakes.controller
 
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
-import snakes.controller.controllerComponent.Controller
 import snakes.model.*
 import snakes.model.gameComponent.Game
 import snakes.model.playerComponent.Player

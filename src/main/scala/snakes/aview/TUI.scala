@@ -1,8 +1,8 @@
 package snakes
 package aview
 
+import snakes.controller.ControllerInterface
 import util.{Event, Observer}
-import snakes.controller.controllerComponent.{Controller, ControllerInterface}
 
 import scala.util.{Failure, Success, Try}
 

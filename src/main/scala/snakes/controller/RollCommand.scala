@@ -1,6 +1,5 @@
-package snakes.controller.controllerComponent
+package snakes.controller
 
-import snakes.controller.controllerComponent.ControllerInterface
 import snakes.model.gameComponent.{GameInterface, Game}
 import snakes.util.*
 

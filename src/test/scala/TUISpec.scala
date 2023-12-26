@@ -4,8 +4,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
 import snakes.model.*
 import snakes.aview.*
-import snakes.controller.*
-import snakes.controller.controllerComponent.Controller
+import snakes.controller.{Controller, *}
 import snakes.model.boardComponent.Board
 import snakes.model.gameComponent.Game
 

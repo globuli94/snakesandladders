@@ -3,8 +3,6 @@ import com.google.inject.Inject
 import snakes.model.*
 import snakes.model.boardComponent.{Board, BoardInterface}
 import snakes.model.playerComponent.{PlayerInterface, Player}
-import snakes.util.Dice
-
 import scala.collection.immutable.Queue
 
 
@@ -15,22 +13,15 @@ case class Game @Inject()(board: Board = Board.createBoard(100),
   extends GameInterface {
 
   override def getBoard: BoardInterface = board
-
-  override def getPlayers: Queue[PlayerInterface] = {
-    queue
-  }
-
+  override def getPlayers: Queue[PlayerInterface] = queue
   override def getCurrentPlayer(): PlayerInterface = getPlayers.head
-
   override def isGameStarted(): Boolean = gameStarted
-
-  def startGame: Game = copy(gameStarted = true)
-
-  def createGame(size: Int): Game = {
+  override def startGame: Game = copy(gameStarted = true)
+  
+  override def createGame(size: Int): Game = {
     Game(Board.createBoard(size*size))
   }
-
-  def createPlayer(name: String): Game = {
+  override def createPlayer(name: String): Game = {
     val player = Player.builder()
       .setName(name)
       .setPosition(1)
@@ -38,8 +29,7 @@ case class Game @Inject()(board: Board = Board.createBoard(100),
       .build()
     Game(board, queue.enqueue(player))
   }
-
-  def moveNextPlayer(roll: Int): Game = {
+  override def moveNextPlayer(roll: Int): Game = {
     val (player, updatedQueue) = queue.dequeue
     var newPosition = player.getPosition + roll
 
@@ -52,14 +42,12 @@ case class Game @Inject()(board: Board = Board.createBoard(100),
 
     Game(board, newQueue, gameStarted)
   }
-
-
+  
   override def toString: String =
     if(!gameStarted && queue.isEmpty) {
       "Welcome to Snakes and Ladders" +
         "\nPlease add Players using add(PLAYER NAME) or create a new game using create(SIZE)!" +
           "\nStart the game rolling the Dice using <roll>"
-
     } else if(queue.last.getPosition == 1 && !gameStarted) {
       queue.last.getName + " has been added to the Game!"
     } else if(board.size == queue.last.getPosition) {
