@@ -1,6 +1,6 @@
 package snakes
 
-import snakes.model.fileIoComponent.FileIoXmlImpl.FileIO
+import snakes.model.fileIoComponent.fileIoXmlImpl.FileIO
 import snakes.model.gameComponent.Game
 import snakes.model.playerComponent.Player
 

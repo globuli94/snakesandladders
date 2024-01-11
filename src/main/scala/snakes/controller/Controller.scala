@@ -1,21 +1,19 @@
 package snakes.controller
 
 import com.google.inject.Inject
-import snakes.model.fileIoComponent.FileIoXmlImpl.FileIO
+import snakes.model.fileIoComponent.FileIOInterface
 import snakes.model.gameComponent.GameInterface
-import snakes.util.{Dice, Event, Observable, UndoManager}
+import snakes.util.{Dice, Event, Observable, UndoManager, CommandInterface}
 
-case class Controller @Inject() (private var gameState: GameInterface) extends ControllerInterface with Observable {
+case class Controller @Inject()(private var gameState: GameInterface, private val fileIo: FileIOInterface) extends ControllerInterface with Observable {
   private val undoManager = new UndoManager
 
-  def saveGame(): Unit = {
-    val fileIo = new FileIO()
+  override def saveGame(): Unit = {
     fileIo.save(getCurrentGameState)
     notifyObservers(Event.Save)
   }
 
-  def loadGame(): Unit = {
-    val fileIo = new FileIO()
+  override def loadGame(): Unit = {
     setGameState(fileIo.load)
     notifyObservers(Event.Load)
   }
@@ -50,4 +48,6 @@ case class Controller @Inject() (private var gameState: GameInterface) extends C
   override def getCurrentGameState: GameInterface = gameState
   override def exitGame(): Unit = sys.exit(0)
   override def toString: String = gameState.toString
+  
+  
 }

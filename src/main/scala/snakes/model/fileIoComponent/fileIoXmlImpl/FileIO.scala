@@ -1,4 +1,4 @@
-package snakes.model.fileIoComponent.FileIoXmlImpl
+package snakes.model.fileIoComponent.fileIoXmlImpl
 
 import snakes.model.boardComponent.Board
 import snakes.model.fileIoComponent.FileIOInterface
