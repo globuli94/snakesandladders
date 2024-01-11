@@ -280,13 +280,17 @@ class GUI(controller: ControllerInterface) extends Frame with Observer {
       case Event.Create | Event.AddPlayer | Event.Undo | Event.Load =>
         contents = updateContents()
         repaint()
-      case Event.Roll(rollResult) =>  rollResultLabel.text = s"$rollResult"
+      case Event.Roll(rollResult) =>
+        rollResultLabel.text = s"$rollResult"
         contents = updateContents()
         repaint()
       case Event.Start =>
         Dialog.showMessage(contents.head, "Game started, please roll the dice.", title = "Game Started")
         contents = updateContents()
         repaint()
+      case Event.Save =>
+        Dialog.showMessage(contents.head, "Game saved successfully.", title = "Game Saved")
     }
   }
+
 }
