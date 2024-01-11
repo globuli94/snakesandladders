@@ -19,4 +19,5 @@ enum Event {
   case Roll(rollResult: Int)
   case Undo
   case Start
+  case Load
 }

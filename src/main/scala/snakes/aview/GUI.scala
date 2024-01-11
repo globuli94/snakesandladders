@@ -30,6 +30,12 @@ class GUI(controller: ControllerInterface) extends Frame with Observer {
           case None =>
         }
       })
+      contents += new MenuItem(Action("Save") {
+        controller.saveGame()
+      })
+      contents += new MenuItem(Action("Load") {
+        controller.loadGame()
+      })
       contents += new MenuItem(Action("Exit") {
         controller.exitGame()
       })
@@ -271,7 +277,7 @@ class GUI(controller: ControllerInterface) extends Frame with Observer {
 
   def update(e: Event): Unit = {
     e match {
-      case Event.Create | Event.AddPlayer | Event.Undo =>
+      case Event.Create | Event.AddPlayer | Event.Undo | Event.Load =>
         contents = updateContents()
         repaint()
       case Event.Roll(rollResult) =>  rollResultLabel.text = s"$rollResult"
