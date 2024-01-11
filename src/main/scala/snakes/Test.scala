@@ -1,12 +1,16 @@
 package snakes
 
-import snakes.model.fileIoComponent.fileIoXmlImpl.FileIO
+import com.google.inject.Guice
+import snakes.SnakesModule
+import snakes.model.fileIoComponent.FileIOInterface
 import snakes.model.gameComponent.Game
 import snakes.model.playerComponent.Player
 
-
 object FileIOTest extends App {
-  val fileIO = new FileIO()
+  // Creating a Guice injector
+  val injector = Guice.createInjector(new SnakesModule)
+  // Using the injector to get an instance of FileIOInterface
+  val fileIO = injector.getInstance(classOf[FileIOInterface])
 
   // Create a test game state
   val player1 = Player("Alice", 1, new java.awt.Color(255, 0, 0), 0)

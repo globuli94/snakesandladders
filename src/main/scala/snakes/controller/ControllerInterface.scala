@@ -1,7 +1,7 @@
 package snakes.controller
 
 import snakes.model.gameComponent.GameInterface
-import snakes.util.Observable
+import snakes.util.{CommandInterface, Observable}
 
 trait ControllerInterface extends Observable {
   def startGame(): Unit
@@ -14,4 +14,5 @@ trait ControllerInterface extends Observable {
   def setGameState(state: GameInterface): Unit
   def saveGame(): Unit
   def loadGame(): Unit
+  def executeCommand(command: CommandInterface):Unit
 }

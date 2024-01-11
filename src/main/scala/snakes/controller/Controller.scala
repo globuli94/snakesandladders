@@ -48,6 +48,10 @@ case class Controller @Inject()(private var gameState: GameInterface, private va
   override def getCurrentGameState: GameInterface = gameState
   override def exitGame(): Unit = sys.exit(0)
   override def toString: String = gameState.toString
-  
+
+  def executeCommand(command: CommandInterface): Unit = {
+    undoManager.doStep(command)
+    notifyObservers(Event.Update) // Event.Update should be defined in your Event enum
+  }
   
 }
