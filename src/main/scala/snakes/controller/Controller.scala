@@ -11,11 +11,13 @@ case class Controller @Inject() (private var gameState: GameInterface) extends C
   def saveGame(): Unit = {
     val fileIo = new FileIO()
     fileIo.save(getCurrentGameState)
+    notifyObservers(Event.Save)
   }
 
   def loadGame(): Unit = {
     val fileIo = new FileIO()
     setGameState(fileIo.load)
+    notifyObservers(Event.Load)
   }
   
   override def setGameState(state: GameInterface): Unit = {

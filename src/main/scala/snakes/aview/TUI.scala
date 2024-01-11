@@ -58,6 +58,10 @@ class TUI(controller: ControllerInterface) extends IUserInputHandler with Observ
       case Event.Start =>
         println("Game started.")
         println(controller.getCurrentGameState.toString)
+      case Event.Save =>
+        println("Game saved.")
+      case Event.Load =>
+        println("Game loaded.")
     }
   }
 }

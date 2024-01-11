@@ -20,4 +20,5 @@ enum Event {
   case Undo
   case Start
   case Load
+  case Save
 }
