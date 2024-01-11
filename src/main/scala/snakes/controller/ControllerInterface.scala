@@ -12,4 +12,6 @@ trait ControllerInterface extends Observable {
   def getCurrentGameState: GameInterface
   def exitGame(): Unit
   def setGameState(state: GameInterface): Unit
+  def saveGame(): Unit
+  def loadGame(): Unit
 }

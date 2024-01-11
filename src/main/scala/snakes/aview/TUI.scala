@@ -31,6 +31,10 @@ class TUI(controller: ControllerInterface) extends IUserInputHandler with Observ
         controller.undoLastAction()
       case "exit" =>
         controller.exitGame()
+      case "save" =>
+        controller.saveGame()
+      case "load" =>
+        controller.loadGame()
       case _ =>
         println("Not a valid command!")
     }
