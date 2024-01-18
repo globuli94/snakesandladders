@@ -16,6 +16,10 @@ trait Observable {
 enum Event {
   case Create
   case AddPlayer
-  case Roll
+  case Roll(rollResult: Int)
   case Undo
+  case Start
+  case Load
+  case Save
+  case Update
 }

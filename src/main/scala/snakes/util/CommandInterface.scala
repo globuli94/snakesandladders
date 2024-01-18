@@ -1,6 +1,6 @@
 package snakes.util
 
-trait Command {
+trait CommandInterface {
   def doStep(): Unit
   def undoStep(): Unit
   //def redoStep(): Unit

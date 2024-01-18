@@ -1,43 +1,67 @@
 package snakes
 package aview
 
+import snakes.controller.ControllerInterface
 import util.{Event, Observer}
-import controller.Controller
 
 import scala.util.{Failure, Success, Try}
 
-class TUI(controller:Controller) extends Observer {
+
+trait IUserInputHandler {
+  def handleInput(input: String): Unit
+}
+
+class TUI(controller: ControllerInterface) extends IUserInputHandler with Observer {
   controller.add(this)
 
-  def getInputAndPrintLoop(input:String): Unit =
+  override def handleInput(input: String): Unit = {
     val splitInput = input.split(" ")
-    val command = splitInput(0)
-
-    splitInput(0) match
-      case "create" => Try(splitInput(1).toInt) match
-        case Success(value) => controller.create(value)
-        case Failure(_) => new IllegalArgumentException("Invalid command")
+    splitInput(0) match {
+      case "create" => Try(splitInput(1).toInt) match {
+        case Success(value) => controller.createGame(value)
+        case Failure(_) => println("Invalid command for create.")
+      }
       case "add" =>
         controller.addPlayer(splitInput(1))
-      case "roll" => 
-        controller.roll()
+      case "start" =>
+        controller.startGame()
+      case "roll" =>
+        controller.rollDice()
       case "undo" =>
-        controller.undo()
-      /*
-      case "redo" =>
-        controller.redo
-
-       */
+        controller.undoLastAction()
       case "exit" =>
-        controller.exit()
-      case _
-      => println("not a valid command!")
-
-  override def update(e: Event): Unit =
-    e.match {
-      case Event.Roll => println(controller.toString)
-      case Event.Undo => println(controller.toString)
-      case Event.Create => println(controller.toString)
-      case Event.AddPlayer => println(controller.toString)
+        controller.exitGame()
+      case "save" =>
+        controller.saveGame()
+      case "load" =>
+        controller.loadGame()
+      case _ =>
+        println("Not a valid command!")
     }
+  }
+
+  override def update(e: Event): Unit = {
+    // Update the TUI based on the event
+    e match {
+      case Event.Roll(rollResult) =>
+        println(s"Player rolled a $rollResult")
+        println(controller.getCurrentGameState.toString)
+      case Event.Undo =>
+        println("Last action was undone.")
+        println(controller.getCurrentGameState.toString)
+      case Event.Create =>
+        println("New game created.")
+        println(controller.getCurrentGameState.toString)
+      case Event.AddPlayer =>
+        println("New player added.")
+        println(controller.getCurrentGameState.toString)
+      case Event.Start =>
+        println("Game started.")
+        println(controller.getCurrentGameState.toString)
+      case Event.Save =>
+        println("Game saved.")
+      case Event.Load =>
+        println("Game loaded.")
+    }
+  }
 }

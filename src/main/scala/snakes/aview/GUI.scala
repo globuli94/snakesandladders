@@ -1,18 +1,15 @@
 package snakes.aview
 
-import org.scalactic.source.Position
-import snakes.controller.Controller
+import snakes.controller.ControllerInterface
 import snakes.util.{Event, Observer}
 
 import scala.math.sqrt
 import java.awt.Color
-import javax.swing.{BorderFactory, BoxLayout, ImageIcon}
+import javax.swing.{BorderFactory, ImageIcon}
 import scala.swing.*
-import scala.swing.Swing.EmptyBorder
-import scala.swing.event.*
 
 // main frame
-class GUI(controller: Controller) extends Frame with Observer {
+class GUI(controller: ControllerInterface) extends Frame with Observer {
   controller.add(this)
   // menubar with AddPlayer and Exit
   title = "Snakes and Ladders"
@@ -33,10 +30,84 @@ class GUI(controller: Controller) extends Frame with Observer {
           case None =>
         }
       })
+      contents += new MenuItem(Action("Save") {
+        controller.saveGame()
+      })
+      contents += new MenuItem(Action("Load") {
+        controller.loadGame()
+      })
       contents += new MenuItem(Action("Exit") {
-        controller.exit()
+        controller.exitGame()
       })
     }
+  }
+  lazy val boardSizeLabel = new FlowPanel {
+    contents += new Label("Select Board Size") {
+      font = new Font("SansSerif", 3, 16)
+    }
+  }
+  lazy val fourButton = new BorderPanel {
+    add(new Button(Action("4x4") {
+      controller.createGame(4)
+    }), BorderPanel.Position.Center)
+    preferredSize = new Dimension(175, 50)
+  }
+  lazy val sixButton = new BorderPanel {
+    add(new Button(Action("6x6") {
+      controller.createGame(6)
+    }), BorderPanel.Position.Center)
+    preferredSize = new Dimension(175, 50)
+  }
+  lazy val eightButton = new BorderPanel {
+    add(new Button(Action("8x8") {
+      controller.createGame(8)
+    }), BorderPanel.Position.Center)
+    preferredSize = new Dimension(175, 50)
+  }
+  lazy val tenButton = new BorderPanel {
+    add(new Button(Action("10x10") {
+      controller.createGame(10)
+    }), BorderPanel.Position.Center)
+    preferredSize = new Dimension(175, 50)
+  }
+  lazy val startButton: Button = new Button {
+    action = Action("Start") {
+      undoButton.visible = true
+      rollButton.visible = true
+      rollResultLabel.visible = true
+      startButton.visible = false
+      boardSizeLabel.visible = false
+      fourButton.visible = false
+      sixButton.visible = false
+      eightButton.visible = false
+      tenButton.visible = false
+
+
+      controller.startGame()
+    }
+    visible = true
+  }
+  lazy val undoButton: Button = new Button {
+    action = Action("Undo") {
+      controller.undoLastAction()
+    }
+    visible = false
+  }
+
+  lazy val rollButton: Button = new Button {
+    action = Action("Roll") {
+      if (controller.getCurrentGameState.getPlayers.isEmpty) {
+        Dialog.showMessage(null, "Add Players first!", "Error", Dialog.Message.Plain, Swing.EmptyIcon)
+      } else if (controller.getCurrentGameState.getPlayers.last.getPosition == controller.getCurrentGameState.getBoard.getSize) {
+        Dialog.showMessage(null, controller.getCurrentGameState.getPlayers.last.getName + " has won the game!", "Winner", Dialog.Message.Plain, Swing.EmptyIcon)
+      } else {
+        controller.rollDice()
+      }
+    }
+    visible = false
+  }
+  private val rollResultLabel = new Button(""){
+    visible = false
   }
 
   contents = updateContents()
@@ -53,13 +124,13 @@ class GUI(controller: Controller) extends Frame with Observer {
       add(new FieldGridPanel(controller), BorderPanel.Position.Center)
       add(new PlayerPanel(controller), BorderPanel.Position.West)
       add(new FlowPanel {
-          contents += new ControlPanel(controller)
-        }, BorderPanel.Position.South)
+        contents += new ControlPanel(controller)
+      }, BorderPanel.Position.South)
     }
   }
 
   // Player Panel
-  private class PlayerPanel(controller: Controller) extends BorderPanel {
+  private class PlayerPanel(controller: ControllerInterface) extends BorderPanel {
     // Create a label for displaying text
     private val playerInfoText = new BoxPanel(Orientation.Vertical) {
       contents += new Label(" Players") {
@@ -74,13 +145,12 @@ class GUI(controller: Controller) extends Frame with Observer {
 
     private val playersContainer = new BoxPanel(Orientation.Vertical)
     // Add other components if needed, e.g., buttons, images, etc.
-    controller.game.queue.foreach { element =>
-      println(element)
+    controller.getCurrentGameState.getPlayers.foreach { element =>
       val playerLayout = new FlowPanel {
-        contents += new Button(element.name + ":" + element.position) {
+        contents += new Button(element.getName + ":" + element.getPosition) {
           preferredSize = new Dimension(100,75)
         }
-        contents += new DotPanel(element.color)
+        contents += new DotPanel(element.getColor)
       }
       playersContainer.contents += playerLayout
     }
@@ -89,60 +159,48 @@ class GUI(controller: Controller) extends Frame with Observer {
   }
 
   // Panel for creating the Game Size
-  class SizeOptionPanel(controller: Controller) extends BoxPanel(Orientation.Vertical) {
-    contents += new FlowPanel {
-      contents += new Label("Select Board Size") {
-        font = new Font("SansSerif", 3, 16)
-      }
-    }
+  class SizeOptionPanel(controller: ControllerInterface) extends BoxPanel(Orientation.Vertical) {
+    contents += boardSizeLabel
     contents += new BoxPanel(Orientation.Horizontal) {
-      contents += new BorderPanel {
-        add(new Button(Action("4x4") {
-          controller.create(4)
-        }), BorderPanel.Position.Center)
-        preferredSize = new Dimension(175, 50)
-      }
-
-      contents += new BorderPanel {
-        add(new Button(Action("6x6") {
-          controller.create(6)
-        }), BorderPanel.Position.Center)
-        preferredSize = new Dimension(175, 50)
-      }
-
-      contents += new BorderPanel {
-        add(new Button(Action("8x8") {
-          controller.create(8)
-        }), BorderPanel.Position.Center)
-        preferredSize = new Dimension(175, 50)
-      }
-
-      contents += new BorderPanel {
-        add(new Button(Action("10x10") {
-          controller.create(10)
-        }), BorderPanel.Position.Center)
-        preferredSize = new Dimension(175, 50)
-      }
+      contents += fourButton
+      contents += sixButton
+      contents += eightButton
+      contents += tenButton
     }
   }
 
-  private class FieldGridPanel(controller: Controller) extends GridPanel(sqrt(controller.game.board.size).toInt, sqrt(controller.game.board.size).toInt) {
-    contents ++= (1 to controller.game.board.size).map { i =>
-        new FieldPanel(controller, i)
+  private class FieldGridPanel(controller: ControllerInterface) extends GridPanel(sqrt(controller.getCurrentGameState.getBoard.getSize).toInt, sqrt(controller.getCurrentGameState.getBoard.getSize).toInt) {
+    val boardSize = sqrt(controller.getCurrentGameState.getBoard.getSize).toInt
+    //zigzag, starting from bottom
+    for (row <- 0 until boardSize) {
+      val base = (boardSize - row - 1) * boardSize
+      if (row % 2 == 0) {
+        //right to left
+        for (col <- (0 until boardSize).reverse) {
+          val fieldNumber = base + col + 1
+          contents += new FieldPanel(controller, fieldNumber)
+        }
+      } else {
+        //left to right
+        for (col <- 0 until boardSize) {
+          val fieldNumber = base + col + 1
+          contents += new FieldPanel(controller, fieldNumber)
+        }
+      }
     }
   }
 
   // creating a single field (field number, players on the field, and)
-  private class FieldPanel(controller: Controller, field: Int) extends BorderPanel {
+  private class FieldPanel(controller: ControllerInterface, field: Int) extends BorderPanel {
     // field number and adds it to the bottom of the field
     private val label = new Label(field.toString)
     layout(label) = BorderPanel.Position.South
 
     // loops through player queue and adds a dot if player position == field position
     val playerDots = new BoxPanel(Orientation.Horizontal) {
-      controller.game.queue.foreach { element =>
-        if (element.position == field) {
-          contents += new DotPanel(element.color)
+      controller.getCurrentGameState.getPlayers.foreach { element =>
+        if (element.getPosition == field) {
+          contents += new DotPanel(element.getColor)
         }
       }
     }
@@ -163,9 +221,9 @@ class GUI(controller: Controller) extends Frame with Observer {
       preferredSize = new Dimension(25,25)
     }
     // adds image icons to bottom of field by checking if field contains a snake or ladder
-    if (controller.game.board.snakes.contains(field)) {
+    if (controller.getCurrentGameState.getBoard.getSnakes.contains(field)) {
       layout(snakeLabel) = BorderPanel.Position.North
-    } else if (controller.game.board.ladders.contains(field)) {
+    } else if (controller.getCurrentGameState.getBoard.getLadders.contains(field)) {
       layout(ladderLabel) = BorderPanel.Position.North
     } else {
       layout(emptyLabel) = BorderPanel.Position.North
@@ -196,32 +254,43 @@ class GUI(controller: Controller) extends Frame with Observer {
     }
   }
 
-  private class ControlPanel(controller: Controller) extends BoxPanel(Orientation.Horizontal) {
+  private class ControlPanel(controller: ControllerInterface) extends BoxPanel(Orientation.Vertical) {
     contents += new BorderPanel {
-      add(new Button(Action("Roll") {
-        if(controller.game.queue.isEmpty) {
-          Dialog.showMessage(null, "Add Players first!", "Error", Dialog.Message.Plain, Swing.EmptyIcon)
-        } else if(controller.game.queue.last.position == controller.game.board.size) {
-          Dialog.showMessage(null,controller.game.queue.last.name +" has won the game!", "Winner", Dialog.Message.Plain, Swing.EmptyIcon)
-        } else {
-          controller.roll()
-        }
-      }), BorderPanel.Position.Center)
+      layout(startButton) = BorderPanel.Position.Center
       preferredSize = new Dimension(400, 50)
     }
-    contents += new BorderPanel {
-      add(new Button(Action("Undo") {
-        controller.undo()
-      }), BorderPanel.Position.Center)
-      preferredSize = new Dimension(300, 50)
+    contents += new BoxPanel(Orientation.Horizontal) {
+      contents += new BorderPanel {
+        layout(rollButton) = BorderPanel.Position.Center
+        preferredSize = new Dimension(400, 50)
+      }
+      contents += new BorderPanel {
+        layout(rollResultLabel) = BorderPanel.Position.Center
+        preferredSize = new Dimension(50, 50)
+      }
+      contents += new BorderPanel {
+        layout(undoButton) = BorderPanel.Position.Center
+        preferredSize = new Dimension(300, 50)
+      }
     }
   }
 
   def update(e: Event): Unit = {
     e match {
-      case Event.Create | Event.AddPlayer | Event.Undo | Event.Roll =>
+      case Event.Create | Event.AddPlayer | Event.Undo | Event.Load =>
         contents = updateContents()
         repaint()
+      case Event.Roll(rollResult) =>
+        rollResultLabel.text = s"$rollResult"
+        contents = updateContents()
+        repaint()
+      case Event.Start =>
+        Dialog.showMessage(contents.head, "Game started, please roll the dice.", title = "Game Started")
+        contents = updateContents()
+        repaint()
+      case Event.Save =>
+        Dialog.showMessage(contents.head, "Game saved successfully.", title = "Game Saved")
     }
   }
+
 }

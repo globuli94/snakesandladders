@@ -9,7 +9,6 @@ class DiceSpec extends AnyWordSpec with Matchers {
     "rolled" should {
       "return a number between 1 and 6" in {
         val dice = new Dice()
-
         dice.rollDice should be >= 1
         dice.rollDice should be <= 6
       }
