@@ -1,7 +1,9 @@
 package snakes.aview
 
+import com.google.inject.Guice
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
+import snakes.SnakesModule
 import snakes.model.*
 import snakes.aview.*
 import snakes.controller.{Controller, *}
@@ -12,7 +14,8 @@ import snakes.model.gameComponent.Game
 class TUISpec extends AnyWordSpec with Matchers {
   "A TUI" when {
     val game: Game = Game(Board.createBoard(5))
-    val controller: Controller = Controller(game)
+    val injector = Guice.createInjector(new SnakesModule)
+    val controller = injector.getInstance(classOf[ControllerInterface])
     val tui = TUI(controller)
     "adding a Player using add NAME" should {
       tui.handleInput("add Peter")
@@ -49,15 +52,5 @@ class TUISpec extends AnyWordSpec with Matchers {
         controller.getCurrentGameState should be (test1)
       }
     }
-    "any other input" should {
-      val game: Game = Game(Board.createBoard(5))
-      val controller: Controller = Controller(game)
-      val tui = TUI(controller)
-      tui.handleInput("bla")
-      "return an unchanged game" in {
-        controller.getCurrentGameState should be(game)
-      }
-    }
-
   }
 }

@@ -1,7 +1,9 @@
 package snakes.controller
 
+import com.google.inject.Guice
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
+import snakes.SnakesModule
 import snakes.model.*
 import snakes.model.gameComponent.Game
 import snakes.model.playerComponent.Player
@@ -11,7 +13,8 @@ class ControllerSpec extends AnyWordSpec with Matchers {
   "Controller" when {
     "undo is called on a game when a dice hase been rolled twice" should {
       val game = Game()
-      val controller = Controller(game)
+      val injector = Guice.createInjector(new SnakesModule)
+      val controller = injector.getInstance(classOf[ControllerInterface])
 
       val gameWithPlayer = controller.addPlayer("Peter")
       controller.rollDice()
@@ -25,17 +28,17 @@ class ControllerSpec extends AnyWordSpec with Matchers {
     }
     "when calling startGame() on a base game" should {
       val game = Game()
-      val controller = Controller(game)
-
+      val injector = Guice.createInjector(new SnakesModule)
+      val controller = injector.getInstance(classOf[ControllerInterface])
       val test = controller.startGame()
       "return a game with the gameState variable set to true" in {
         controller.getCurrentGameState.isGameStarted() should be(true)
       }
     }
     "undo is called on a game when no commands have been used" should {
-      val game = Game()
-      val controller = Controller(game)
-
+      val injector = Guice.createInjector(new SnakesModule)
+      val controller = injector.getInstance(classOf[ControllerInterface])
+      val game = controller.getCurrentGameState
       controller.undoLastAction()
 
       "return the same game" in {
@@ -43,8 +46,9 @@ class ControllerSpec extends AnyWordSpec with Matchers {
       }
     }
     "toString" should {
+      val injector = Guice.createInjector(new SnakesModule)
+      val controller = injector.getInstance(classOf[ControllerInterface])
       val game = Game()
-      val controller = Controller(game)
       val test = controller.toString
       "return the toString from the model aGame" in {
         test should be(controller.getCurrentGameState.toString)
