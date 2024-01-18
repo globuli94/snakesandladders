@@ -22,7 +22,7 @@ case class Controller @Inject()(private var gameState: GameInterface, private va
     gameState = state
   }
   override def startGame(): Unit = {
-    if (!gameState.isGameStarted()) {
+    if (!gameState.isGameStarted() && gameState.getPlayers.nonEmpty) {
       gameState = gameState.startGame
       notifyObservers(Event.Start)
     }
