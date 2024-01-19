@@ -53,5 +53,7 @@ case class Controller @Inject()(private var gameState: GameInterface, private va
     undoManager.doStep(command)
     notifyObservers(Event.Update) // Event.Update should be defined in your Event enum
   }
-  
+
+  override def getBoardSize: Int =
+    gameState.getBoard.getSize
 }

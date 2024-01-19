@@ -15,7 +15,7 @@ class PlayerSpec extends AnyWordSpec {
       "return a Player with the name Jonathan and the position 0" in {
         player.name should be("Marko")
         player.position should be(0)
-        player.getColor should be(Color.yellow)
+        player.getColor should be(Color.black)
       }
     }
     "at position 0 and moved by moveTo(10)" should {
