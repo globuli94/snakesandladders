@@ -26,11 +26,11 @@ object Player {
 
     def setColor(x:Int): Builder = {
       val colorMap: Map[Int, Color] = Map(
-        0 -> Color.green,
-        1 -> Color.yellow,
-        2 -> Color.black,
-        3 -> Color.blue,
-        4 -> Color.orange
+        0 -> new Color(0xFFFFFF),
+        1 -> new Color(0x000000),
+        2 -> new Color(0xBB1717),
+        3 -> new Color(0xDAB609),
+        4 -> new Color(0x8731D5),
       )
       color = colorMap(x)
       this

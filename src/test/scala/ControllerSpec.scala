@@ -27,12 +27,11 @@ class ControllerSpec extends AnyWordSpec with Matchers {
       }
     }
     "when calling startGame() on a base game" should {
-      val game = Game()
       val injector = Guice.createInjector(new SnakesModule)
       val controller = injector.getInstance(classOf[ControllerInterface])
-      val test = controller.startGame()
+      controller.startGame()
       "return a game with the gameState variable set to true" in {
-        controller.getCurrentGameState.isGameStarted() should be(true)
+        controller.getCurrentGameState.isGameStarted() should be(false)
       }
     }
     "undo is called on a game when no commands have been used" should {

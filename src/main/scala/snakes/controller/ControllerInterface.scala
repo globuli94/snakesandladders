@@ -15,4 +15,5 @@ trait ControllerInterface extends Observable {
   def saveGame(): Unit
   def loadGame(): Unit
   def executeCommand(command: CommandInterface):Unit
+  def getBoardSize:Int
 }
