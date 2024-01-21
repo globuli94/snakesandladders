@@ -11,6 +11,9 @@ import snakes.model.playerComponent.Player
 class ControllerSpec extends AnyWordSpec with Matchers {
 
   "Controller" when {
+    val injector = Guice.createInjector(new SnakesModule)
+    val controller = injector.getInstance(classOf[ControllerInterface])
+
     "undo is called on a game when a dice hase been rolled twice" should {
       val game = Game()
       val injector = Guice.createInjector(new SnakesModule)
@@ -51,6 +54,33 @@ class ControllerSpec extends AnyWordSpec with Matchers {
       val test = controller.toString
       "return the toString from the model aGame" in {
         test should be(controller.getCurrentGameState.toString)
+      }
+    }
+    "restarting a game" should {
+      "reset the game to its initial state" in {
+        controller.restartGame()
+        controller.getCurrentGameState.getPlayers shouldBe empty
+        controller.getCurrentGameState.isGameStarted() shouldBe false
+      }
+    }
+    "checking the win condition" should {
+      "identify when a player has won the game" in {
+        controller.addPlayer("Frank")
+        controller.startGame()
+        while (!controller.checkWin()) {
+          controller.rollDice()
+        }
+        controller.checkWin() shouldBe true
+      }
+    }
+    "executing a command" should {
+      "change the game state accordingly" in {
+        controller.restartGame()
+        controller.addPlayer("Henry")
+        controller.startGame()
+        val initialPosition = controller.getCurrentGameState.getCurrentPlayer().getPosition
+        controller.rollDice()
+        controller.getCurrentGameState.getCurrentPlayer().getPosition should not be initialPosition
       }
     }
   }

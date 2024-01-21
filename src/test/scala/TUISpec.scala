@@ -52,5 +52,32 @@ class TUISpec extends AnyWordSpec with Matchers {
         controller.getCurrentGameState should be (test1)
       }
     }
+    "save and load a game" should {
+      "correctly save and then load the game state" in {
+        tui.handleInput("save")
+        tui.handleInput("add John")
+        tui.handleInput("load")
+        controller.getCurrentGameState.getPlayers should not contain "John"
+      }
+    }
+    "exit the game" should {
+      "terminate the game session" in {
+        tui.handleInput("exit")
+      }
+    }
+    "add multiple players" should {
+      "add all the players to the game" in {
+        tui.handleInput("add Alice")
+        tui.handleInput("add Bob")
+        controller.getCurrentGameState.getPlayers.map(_.getName) should contain allOf("Alice", "Bob")
+      }
+    }
+    "A TUI" should {
+      "handle commands with too few arguments" in {
+        val initialGameState = controller.getCurrentGameState
+        tui.handleInput("add")
+        controller.getCurrentGameState shouldEqual initialGameState
+      }
+    }
   }
 }
