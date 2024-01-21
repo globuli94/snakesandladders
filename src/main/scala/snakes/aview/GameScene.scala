@@ -247,12 +247,12 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
     if (controller.checkWin()) {
       val winningPlayer = controller.getCurrentGameState.getPlayers.find(_.getPosition == controller.getBoardSize).get
       val response = Dialog.showConfirmation(contents.head,
-        s"Player ${winningPlayer.getName} has won!\nDo you want to exit the game?",
+        s"Player ${winningPlayer.getName} has won!\nDo you want to return to main menu?",
         title = "Game Over",
         optionType = Dialog.Options.YesNo)
 
       if (response == Dialog.Result.Yes) {
-        controller.exitGame()
+        controller.restartGame()
       }
     }
   }
