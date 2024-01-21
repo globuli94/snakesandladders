@@ -203,38 +203,7 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
     playersList.repaint()
   }
 
-  def animatePlayerMovement(rollResult: Int): Unit = {
-    val currentPlayer = controller.getCurrentGameState.getCurrentPlayer()
-    val oldPosition = currentPlayer.getPosition - rollResult
-    var animationPosition = oldPosition
-    val intermediateTarget = oldPosition + rollResult
-    var isIntermediatePhase = true
 
-    val timer = new javax.swing.Timer(150, null)
-    timer.addActionListener(new java.awt.event.ActionListener {
-      def actionPerformed(e: java.awt.event.ActionEvent): Unit = {
-        if (isIntermediatePhase) {
-          if (animationPosition != intermediateTarget) {
-            animationPosition += Math.signum(intermediateTarget - animationPosition).toInt
-          } else {
-            isIntermediatePhase = false
-          }
-        } else {
-          if (animationPosition != currentPlayer.getPosition) {
-            animationPosition += 1
-          } else {
-            timer.stop()
-          }
-        }
-
-        val updatedPositions = gameBoard.playerPositions.updated(
-          currentPlayer.getName, (animationPosition, currentPlayer.getColor)
-        )
-        gameBoard.updatePlayerPositions(updatedPositions)
-      }
-    })
-    timer.start()
-  }
 
   def showDiceAnimationThenResult(rollResult: Int): Unit = {
     var currentImageIndex = 1
@@ -251,7 +220,7 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
         if (currentImageIndex > 6) {
           timer.stop()
           updateDiceImage(rollResult)
-          animatePlayerMovement(rollResult)
+          updatePlayerPositions()
         }
       }
     })
