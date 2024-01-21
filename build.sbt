@@ -15,4 +15,5 @@ lazy val root = project
         libraryDependencies += "com.google.inject" % "guice" % "5.1.0",
         libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "2.2.0",
         libraryDependencies += "com.typesafe.play" %% "play-json" % "2.10.3",
+        libraryDependencies += "javazoom" % "jl" % "1.0.2",
   )

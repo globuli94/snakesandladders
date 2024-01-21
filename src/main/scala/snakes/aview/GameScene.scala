@@ -7,6 +7,7 @@ import snakes.util.Event.Load
 import snakes.util.{Event, Observer}
 
 import java.awt.{Color, Font, RenderingHints}
+import javax.sound.sampled._
 import javax.swing.{ImageIcon, Timer}
 import javax.swing.border.{EmptyBorder, LineBorder, TitledBorder}
 import scala.swing.BorderPanel.Position.Center
@@ -281,6 +282,7 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
     }.toMap
     gameBoard.updatePlayerPositions(positions)
   }
+
 
 
   override def update(e: Event): Unit = {
