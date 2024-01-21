@@ -7,7 +7,7 @@ import snakes.util.Event.Load
 import snakes.util.{Event, Observer}
 
 import java.awt.{Color, Font, RenderingHints}
-import javax.swing.ImageIcon
+import javax.swing.{ImageIcon, Timer}
 import javax.swing.border.{EmptyBorder, LineBorder, TitledBorder}
 import scala.swing.BorderPanel.Position.Center
 
@@ -24,7 +24,7 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
 
   background = poolTableGreen
   opaque = true
-  
+
   val diceImageIcon = new ImageIcon("dice_5.png")
   val diceImageLabel = new Label {
     icon = diceImageIcon
@@ -133,7 +133,7 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
     }
     opaque = false
   }
-  
+
   val playersPanel = new BoxPanel(Orientation.Vertical) {
     contents += playersListLabel
     contents += Swing.VStrut(20)
@@ -141,9 +141,9 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
     contents += Swing.VStrut(20)
     contents += buttonsPanel
     border = Swing.EmptyBorder(0, 10, 10, 10)
-    opaque = false 
+    opaque = false
   }
-  
+
   val horizontalPanel = new BoxPanel(Orientation.Horizontal) {
     contents += Swing.HStrut(20)
     contents += leftPanel
@@ -153,11 +153,11 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
     background = poolTableGreen
     opaque = true
   }
-  
+
   layout(horizontalPanel) = Center
 
 
-  
+
   class ColorDot(color: Color) extends Panel {
     minimumSize = new Dimension(12, 12)
     maximumSize = new Dimension(12, 12)
@@ -179,23 +179,23 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
   def updateBoardSize(size: Int): Unit = {
     gameBoard.updateBoardSize(size)
   }
-  
+
   private def updateDiceImage(rollResult: Int): Unit = {
     val diceImagePath = s"dice_$rollResult.png"
     diceImageLabel.icon = new ImageIcon(diceImagePath)
     diceImageLabel.repaint()
   }
-  
+
   private def updatePlayerList(): Unit = {
     playersList.contents.clear()
     controller.getCurrentGameState.getPlayers.foreach { player =>
-      // Add a label for each player
+
       playersList.contents += new Label(player.getName) {
         font = new Font("Arial", Font.BOLD, 22)
         foreground = Color.WHITE
         playersList.contents += new ColorDot(player.getColor)
       }
-      
+
       playersList.contents += Swing.VStrut(18)
     }
     playersList.revalidate()
@@ -206,16 +206,24 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
     val currentPlayer = controller.getCurrentGameState.getCurrentPlayer()
     val oldPosition = currentPlayer.getPosition - rollResult
     var animationPosition = oldPosition
+    val intermediateTarget = oldPosition + rollResult
+    var isIntermediatePhase = true
 
-    val timer = new javax.swing.Timer(300, null)
+    val timer = new javax.swing.Timer(150, null)
     timer.addActionListener(new java.awt.event.ActionListener {
       def actionPerformed(e: java.awt.event.ActionEvent): Unit = {
-        if (animationPosition < currentPlayer.getPosition) {
-          animationPosition += 1
-        } else if (animationPosition > currentPlayer.getPosition) {
-          animationPosition -= 1
+        if (isIntermediatePhase) {
+          if (animationPosition != intermediateTarget) {
+            animationPosition += Math.signum(intermediateTarget - animationPosition).toInt
+          } else {
+            isIntermediatePhase = false
+          }
         } else {
-          timer.stop()
+          if (animationPosition != currentPlayer.getPosition) {
+            animationPosition += 1
+          } else {
+            timer.stop()
+          }
         }
 
         val updatedPositions = gameBoard.playerPositions.updated(
@@ -226,6 +234,30 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
     })
     timer.start()
   }
+
+  def showDiceAnimationThenResult(rollResult: Int): Unit = {
+    var currentImageIndex = 1
+    val totalDuration = 500
+    val interval = totalDuration / 6
+
+    val timer = new Timer(interval, null)
+    timer.addActionListener(new java.awt.event.ActionListener {
+      def actionPerformed(e: java.awt.event.ActionEvent): Unit = {
+        if (currentImageIndex <= 6) {
+          updateDiceImage(currentImageIndex)
+          currentImageIndex += 1
+        }
+        if (currentImageIndex > 6) {
+          timer.stop()
+          updateDiceImage(rollResult)
+          animatePlayerMovement(rollResult)
+        }
+      }
+    })
+    timer.start()
+  }
+
+
 
   def winMenu(): Unit = {
     if (controller.checkWin()) {
@@ -240,8 +272,6 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
       }
     }
   }
-
-
 
 
   def updatePlayerPositions(): Unit = {
@@ -263,11 +293,9 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
         gameBoard.updateSnakes(snakes)
 
       case Event.Roll(rollResult) =>
-        updateDiceImage(rollResult)
+        showDiceAnimationThenResult(rollResult)
         updatePlayerList()
-        updatePlayerPositions()
         winMenu()
-
 
       case Event.AddPlayer | Event.Undo | Event.Load =>
         updatePlayerList()

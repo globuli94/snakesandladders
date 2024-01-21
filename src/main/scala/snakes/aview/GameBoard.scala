@@ -139,7 +139,7 @@ class GameBoard(var boardSize: Int, var ladders: Map[Int, Int] = Map(), var snak
     g.fillOval(eye2X - eyeSize / 2, eye2Y - eyeSize / 2, eyeSize, eyeSize)
 
     g.setStroke(new BasicStroke(3))
-    
+
     val smileWidth = 12
     val smileHeight = 6
     val smileX = startX - smileWidth / 2
