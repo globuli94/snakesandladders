@@ -54,6 +54,10 @@ case class Controller @Inject()(private var gameState: GameInterface, private va
     notifyObservers(Event.Update) // Event.Update should be defined in your Event enum
   }
 
+  def checkWin(): Boolean = {
+    getCurrentGameState.getPlayers.exists(_.getPosition == getBoardSize)
+  }
+
   override def getBoardSize: Int =
     gameState.getBoard.getSize
 }

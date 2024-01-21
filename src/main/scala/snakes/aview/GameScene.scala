@@ -235,6 +235,13 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
     timer.start()
   }
 
+  def winMenu(): Unit = {
+    if (controller.checkWin()) {
+      val winningPlayer = controller.getCurrentGameState.getPlayers.find(_.getPosition == controller.getBoardSize).get
+      Dialog.showMessage(contents.head, s"Player ${winningPlayer.getName} has won!", title = "Game Over")
+    }
+  }
+
 
 
   def updatePlayerPositions(): Unit = {
@@ -262,6 +269,7 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
         updateDiceImage(rollResult)
         updatePlayerList() // Update player list on roll
         updatePlayerPositions()
+        winMenu()
 
 
       case Event.AddPlayer | Event.Undo | Event.Load =>
