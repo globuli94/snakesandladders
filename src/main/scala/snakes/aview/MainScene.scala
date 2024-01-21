@@ -146,17 +146,11 @@ class MainScene(controller: ControllerInterface) extends BoxPanel(Orientation.Ve
     e match {
       case Event.Create => Dialog.showMessage(contents.head, "A new board has been created.")
       case Event.AddPlayer => Dialog.showMessage(contents.head, "A new player has been added.")
-      case Event.Start => switchToGameScene()
 
-      // Handle other events as necessary
-      case _ => // Other events can be handled here
+      case _ => 
     }
   }
-
-  // Method to switch to the game scene
-  def switchToGameScene(): Unit = {
-    // Implement scene switching logic here
-  }
+  
 
   // Styling the MainScene
   border = Swing.EmptyBorder(10)

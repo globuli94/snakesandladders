@@ -35,6 +35,8 @@ class TUI(controller: ControllerInterface) extends IUserInputHandler with Observ
         controller.saveGame()
       case "load" =>
         controller.loadGame()
+      case "return" =>
+        controller.restartGame()
       case _ =>
         println("Not a valid command!")
     }
@@ -62,6 +64,8 @@ class TUI(controller: ControllerInterface) extends IUserInputHandler with Observ
         println("Game saved.")
       case Event.Load =>
         println("Game loaded.")
+      case Event.Restart =>
+        println("Returned to Main Menu.")
     }
   }
 }

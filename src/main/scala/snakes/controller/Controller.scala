@@ -27,6 +27,9 @@ case class Controller @Inject()(private var gameState: GameInterface, private va
       notifyObservers(Event.Start)
     }
   }
+  override def restartGame(): Unit = {
+    notifyObservers(Event.Restart)
+  }
   override def createGame(size: Int): Unit = {
     gameState = gameState.createGame(size)
     notifyObservers(Event.Create)

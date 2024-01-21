@@ -122,6 +122,14 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
       foreground = buttonTextColor
       font = new Font("Arial", Font.BOLD, 18)
     }
+    contents += new Button(Action("Return") {
+      controller.restartGame()
+    }) {
+      maximumSize = new Dimension(200, 50)
+      background = buttonFillColor
+      foreground = buttonTextColor
+      font = new Font("Arial", Font.BOLD, 18)
+    }
     contents += new Button(Action("Exit") {
       controller.exitGame()
     }) {
@@ -238,9 +246,17 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
   def winMenu(): Unit = {
     if (controller.checkWin()) {
       val winningPlayer = controller.getCurrentGameState.getPlayers.find(_.getPosition == controller.getBoardSize).get
-      Dialog.showMessage(contents.head, s"Player ${winningPlayer.getName} has won!", title = "Game Over")
+      val response = Dialog.showConfirmation(contents.head,
+        s"Player ${winningPlayer.getName} has won!\nDo you want to exit the game?",
+        title = "Game Over",
+        optionType = Dialog.Options.YesNo)
+
+      if (response == Dialog.Result.Yes) {
+        controller.exitGame()
+      }
     }
   }
+
 
 
 

@@ -37,20 +37,26 @@ class GUI(controller: ControllerInterface) extends MainFrame with Observer {
   // Register this GUI as an observer to the controller
   controller.add(this)
 
+  def showMainScene(): Unit = {
+    contents = mainScene
+  }
+
+  def showGameScene(): Unit = {
+    contents = gameScene
+  }
+
   // Implement the update method from the Observer trait
   override def update(e: Event): Unit = {
     e match {
       case Event.Start =>
-        // Here you would switch to the game scene
-        contents = gameScene
+        showGameScene()
         repaint()
         revalidate()
-      case Event.Roll(rollResult) =>
-      // Handle roll event if necessary, for example, updating the game scene
-      case Event.Undo =>
-      // Handle undo event if necessary
+      case Event.Restart => 
+        showMainScene()
+        repaint()
+        revalidate()
       case _ =>
-      // Handle other events
     }
   }
 
