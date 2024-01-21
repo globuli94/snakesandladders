@@ -40,21 +40,18 @@ class GameBoard(var boardSize: Int, var ladders: Map[Int, Int] = Map(), var snak
       val cellX = if (y % 2 == 0) x else (boardSize - 1) - x
       val cellY = boardSize - 1 - y
 
-      // Set alternating colors for the cells
       g.setColor(if ((cellX + cellY) % 2 == 0) new Color(0x3cB371) else new Color(0xADD8E6))
       g.fillRect(cellX * cellSize, cellY * cellSize, cellSize, cellSize)
 
       g.setColor(Color.BLACK)
       g.drawRect(cellX * cellSize, cellY * cellSize, cellSize, cellSize)
 
-      // Draw the cell numbers
       val label = (i + 1).toString
       val labelWidth = fontMetrics.stringWidth(label)
       val labelHeight = fontMetrics.getAscent
       g.setFont(new Font("Arial", Font.BOLD, cellSize / 5))
       g.drawString(label, (cellX * cellSize) + (cellSize - labelWidth) / 2, (cellY * cellSize) + (cellSize + labelHeight) / 2)
     }
-    // Draw player pieces
     val pieceRadius = preferredSize.width / boardSize * 0.3
     playerPositions.foreach { case (playerName, (position, color)) =>
       val (x, y) = getCellCoordinates(position)
@@ -63,7 +60,6 @@ class GameBoard(var boardSize: Int, var ladders: Map[Int, Int] = Map(), var snak
       g.setColor(color)
       g.fillOval(centerX - pieceRadius.toInt, centerY - pieceRadius.toInt, (pieceRadius * 2).toInt, (pieceRadius * 2).toInt)
     }
-    // Draw ladders
     ladders.foreach { case (start, end) =>
       drawLadder(g, start, end)
     }
@@ -78,24 +74,20 @@ class GameBoard(var boardSize: Int, var ladders: Map[Int, Int] = Map(), var snak
     val offsetDistance = 12
     val rungSpacing = 20
 
-    // Calculate the main line's start and end points
     val (mainStartX, mainStartY) = getCellCenter(start)
     val (mainEndX, mainEndY) = getCellCenter(end)
 
-    // Calculate the offset for the parallel lines
     val dx = mainEndX - mainStartX
     val dy = mainEndY - mainStartY
     val distance = sqrt(pow(dx, 2) + pow(dy, 2))
     val offsetX = offsetDistance * dy / distance
     val offsetY = offsetDistance * dx / distance
 
-    // Calculate the start and end points for the parallel lines
     val (line1StartX, line1StartY) = (mainStartX - offsetX, mainStartY + offsetY)
     val (line1EndX, line1EndY) = (mainEndX - offsetX, mainEndY + offsetY)
     val (line2StartX, line2StartY) = (mainStartX + offsetX, mainStartY - offsetY)
     val (line2EndX, line2EndY) = (mainEndX + offsetX, mainEndY - offsetY)
 
-    // Draw the parallel lines
     val ladderColor = new Color(0xda8155)
     g.setColor(ladderColor)
     g.setStroke(new BasicStroke(6))
@@ -103,7 +95,6 @@ class GameBoard(var boardSize: Int, var ladders: Map[Int, Int] = Map(), var snak
     g.drawLine(line1StartX.toInt, line1StartY.toInt, line1EndX.toInt, line1EndY.toInt)
     g.drawLine(line2StartX.toInt, line2StartY.toInt, line2EndX.toInt, line2EndY.toInt)
 
-    // Drawing rungs
     val numRungs = ((distance - rungSpacing) / rungSpacing).toInt
     for (i <- 1 to numRungs) {
       val t = min(1.0, i * rungSpacing / distance)
@@ -127,17 +118,14 @@ class GameBoard(var boardSize: Int, var ladders: Map[Int, Int] = Map(), var snak
     val (startX, startY) = getCellCenter(start)
     val (endX, endY) = getCellCenter(end)
 
-    // control points
     val ctrlX1 = startX + (endX - startX) * 0.33
     val ctrlY1 = startY + (endY - startY) * 0.77
     val ctrlX2 = startX + (endX - startX) * 0.77
     val ctrlY2 = startY + (endY - startY) * 0.33
 
-    // Draw the curve
     val snakeCurve = new CubicCurve2D.Double(startX, startY, ctrlX1, ctrlY1, ctrlX2, ctrlY2, endX, endY)
     g.draw(snakeCurve)
 
-    // Eye dimensions and offset
     val eyeSize = 6
     val eyeOffset = 6
 
@@ -151,14 +139,12 @@ class GameBoard(var boardSize: Int, var ladders: Map[Int, Int] = Map(), var snak
     g.fillOval(eye2X - eyeSize / 2, eye2Y - eyeSize / 2, eyeSize, eyeSize)
 
     g.setStroke(new BasicStroke(3))
-
-    // Smile
+    
     val smileWidth = 12
     val smileHeight = 6
     val smileX = startX - smileWidth / 2
     val smileY = startY + eyeOffset
 
-    // Set color and draw the smile
     g.setColor(Color.WHITE)
     g.drawArc(smileX, smileY, smileWidth, smileHeight, 0, -180)
 

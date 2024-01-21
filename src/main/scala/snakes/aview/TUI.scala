@@ -35,7 +35,7 @@ class TUI(controller: ControllerInterface) extends IUserInputHandler with Observ
         controller.saveGame()
       case "load" =>
         controller.loadGame()
-      case "return" =>
+      case "restart" =>
         controller.restartGame()
       case _ =>
         println("Not a valid command!")
@@ -43,7 +43,6 @@ class TUI(controller: ControllerInterface) extends IUserInputHandler with Observ
   }
 
   override def update(e: Event): Unit = {
-    // Update the TUI based on the event
     e match {
       case Event.Roll(rollResult) =>
         println(s"Player rolled a $rollResult")

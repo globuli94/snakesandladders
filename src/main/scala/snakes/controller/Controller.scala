@@ -28,6 +28,7 @@ case class Controller @Inject()(private var gameState: GameInterface, private va
     }
   }
   override def restartGame(): Unit = {
+    gameState = gameState.createGame(gameState.getBoard.getSize)
     notifyObservers(Event.Restart)
   }
   override def createGame(size: Int): Unit = {
@@ -54,7 +55,7 @@ case class Controller @Inject()(private var gameState: GameInterface, private va
 
   def executeCommand(command: CommandInterface): Unit = {
     undoManager.doStep(command)
-    notifyObservers(Event.Update) // Event.Update should be defined in your Event enum
+    notifyObservers(Event.Update)
   }
 
   def checkWin(): Boolean = {

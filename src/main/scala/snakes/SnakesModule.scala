@@ -13,7 +13,6 @@ class SnakesModule extends AbstractModule with ScalaModule {
     bind[GameInterface].toInstance(Game())
     bind[ControllerInterface].to[Controller]
 
-    // Choose implementation based on a system property or configuration
     val useJson = System.getProperty("fileio.json", "false").toBoolean
     if (useJson) {
       bind[FileIOInterface].to[JsonFileIO]
