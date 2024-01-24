@@ -26,7 +26,7 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
   background = poolTableGreen
   opaque = true
 
-  val diceImageIcon = new ImageIcon("dice_5.png")
+  val diceImageIcon = new ImageIcon("src/resources/dice_5.png")
   val diceImageLabel = new Label {
     icon = diceImageIcon
     preferredSize = new Dimension(200, 200)
@@ -182,7 +182,7 @@ class GameScene(controller: ControllerInterface) extends BorderPanel with Observ
   }
 
   private def updateDiceImage(rollResult: Int): Unit = {
-    val diceImagePath = s"dice_$rollResult.png"
+    val diceImagePath = s"src/resources/dice_$rollResult.png"
     diceImageLabel.icon = new ImageIcon(diceImagePath)
     diceImageLabel.repaint()
   }

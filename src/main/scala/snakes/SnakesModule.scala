@@ -21,4 +21,3 @@ class SnakesModule extends AbstractModule with ScalaModule {
     }
   }
 }
-
