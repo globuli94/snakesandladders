@@ -134,8 +134,8 @@ class MainScene(controller: ControllerInterface) extends BoxPanel(Orientation.Ve
 
   override def update(e: Event): Unit = {
     e match {
-      case Event.Create => Dialog.showMessage(contents.head, "A new board has been created.")
-      case Event.AddPlayer => Dialog.showMessage(contents.head, "A new player has been added.")
+      case Event.Create =>
+      case Event.AddPlayer =>
 
       case _ => 
     }
