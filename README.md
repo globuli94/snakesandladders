@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/globuli94/snakesandladders/badge.svg?branch=main)](https://coveralls.io/github/globuli94/snakesandladders?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/globuli94/snakesandladders/badge.svg?branch=main)](https://coveralls.io/github/globuli94/snakesandladders?branch=main) 
 # snakesandladders
 **Snakes and Ladders** is a classic board game that combines luck and strategy.
 
